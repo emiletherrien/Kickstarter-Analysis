@@ -12,5 +12,12 @@ The introduction section includes an introduction to the subject matter you’re
 In this section, you will describe the data set you wish to explore. This includes a description of the observations in the data set, a general description of the variables in the data set, and a description of how the data was originally collected (not how you found the data but how the original curator of the data collected it).
 
 ###Glimpse of data
-Use the glimpse function to print a summary of the data at the end of your proposal.
-Place your data in a /data folder of the repo you create. Later on you will include the codebook in the README of the data folder.
+
+```{r file-glimpse}
+library(tidyverse)
+
+kickstarter = read_csv("data/ks-projects-201801.csv")
+glimpse(kickstart)
+
+```
+
