@@ -1,0 +1,6 @@
+---
+title: "Kickstarter Analysis Proposal"
+subtitle: "10/9/2020"
+author: "The laureates: Farzeen Najam, Olivia Olsher, Vincent Liu, Emilie Therrien"
+output: pdf_document
+---
