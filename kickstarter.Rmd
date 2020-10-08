@@ -1,7 +1,7 @@
 ---
 title: "Kickstarter Analysis Proposal"
 subtitle: "10/9/2020"
-author: "The laureates: Farzeen Najam, Olivia Olsher, Vincent Liu, Emilie Therrien"
+author: "The Laureates: Farzeen Najam, Olivia Olsher, Vincent Liu, Emile Therrien"
 output: pdf_document
 ---
 
@@ -11,13 +11,13 @@ The introduction section includes an introduction to the subject matter you’re
 ### Data description
 In this section, you will describe the data set you wish to explore. This includes a description of the observations in the data set, a general description of the variables in the data set, and a description of how the data was originally collected (not how you found the data but how the original curator of the data collected it).
 
-###Glimpse of data
+### Glimpse of data
 
-```{r file-glimpse}
+```{r file-glimpse, eval=TRUE}
 library(tidyverse)
 
 kickstarter = read_csv("data/ks-projects-201801.csv")
-glimpse(kickstart)
+glimpse(kickstarter)
 
 ```
 
