@@ -22,29 +22,15 @@ Our hypotheses include:
 
 
 ### Data description
-This data set contains 15 variables and 378,661 observations, where each
-observation is one kickstarter project.
+This data set contains 15 variables and 378,661 observations, where each observation is one kickstarter project.
 
-The categorical variables include the name of each project, the category of each
-project (music, narrative film, restaurant, etc.), a broader category of each
-(food, film, publishing, etc.), the crowdsourcing currency, the state of each
-project (failed, successful, or cancelled), and the country of origin for each 
-project.
+The categorical variables include the name of each project, the category of each project (music, narrative film, restaurant, etc.), a broader category of each (food, film, publishing, etc.), the crowdsourcing currency, the state of each project (failed, successful, or cancelled), and the country of origin for each project.
 
-The numerical data are the project’s ID number, the monetary goal for each, the
-money pledged to each project, how many backers of each project; there are three
-numerical variables that are not self-explanatory, usd_pledged: conversion in US
-dollars of the pledged column (conversion done by kickstarter), usd_pledge_real:
-conversion in US dollars of the pledged column (conversion from Fixer.io API),
-and usd_goal_real: conversion in US dollars of the goal column (conversion from
-Fixer.io API).
+The numerical data are the project’s ID number, the monetary goal for each, the money pledged to each project, how many backers of each project; there are three numerical variables that are not self-explanatory, usd_pledged: conversion in US dollars of the pledged column (conversion done by kickstarter), usd_pledge_real: conversion in US dollars of the pledged column (conversion from Fixer.io API), and usd_goal_real: conversion in US dollars of the goal column (conversion from Fixer.io API).
 
-There are also two date columns, one for the project launch and the other for
-the crowd sourcing deadline.
+There are also two date columns, one for the project launch and the other for the crowdsourcing deadline.
 
-The data were collected from Kickstarter Platform, to be used by data scientists
-to possibly model whether or not a project will be successful or not when it is
-launched.
+The data were collected from Kickstarter Platform likely using web scraping methods on their own site, to be used by data scientists to model whether or not a project will be successful or not when it is launched.
 
 
 ### Glimpse of data
