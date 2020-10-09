@@ -13,10 +13,10 @@ In this section, you will describe the data set you wish to explore. This includ
 
 ### Glimpse of data
 
-```{r file-glimpse, eval=TRUE}
+```{r file-glimpse, eval=TRUE, warning=FALSE, message=FALSE}
 library(tidyverse)
 
-kickstarter = read_csv("data/ks-projects-201801.csv")
+kickstarter <- read_csv("data/ks-projects-201801.csv")
 glimpse(kickstarter)
 
 ```
