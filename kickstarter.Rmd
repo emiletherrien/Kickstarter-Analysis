@@ -16,9 +16,7 @@ Our Hypothesis:
 
 The more money the project asks for, the less successful it will be in terms of 
 getting funding. 
-Tech projects could most likely be funded.
-
-
+The category “Technology” will be the most likely funded type of projects.
 
 ### Data description
 This data set contains 15 variables and 378,661 observations, where each
