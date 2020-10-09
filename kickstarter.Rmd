@@ -8,6 +8,15 @@ output: pdf_document
 ### Introduction
 The introduction section includes an introduction to the subject matter you’re investigating, the motivation for your research question (citing any relevant literature), the general research question you wish to explore, and your hypotheses regarding the research question of interest.
 
+Introduction:
+
+Question of Interest:
+
+Our Hypothesis:
+The more money the project asks for, the less successful it will be in terms of getting funding. 
+Tech projects could most likely be funded.
+
+
 ### Data description
 
 In this section, you will describe the data set you wish to explore. This includes a description of the observations in the data set, a general description of the variables in the data set, and a description of how the data was originally collected (not how you found the data but how the original curator of the data collected it).
