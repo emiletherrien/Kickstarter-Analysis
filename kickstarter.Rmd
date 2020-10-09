@@ -13,13 +13,38 @@ Introduction:
 Question of Interest:
 
 Our Hypothesis:
+
 The more money the project asks for, the less successful it will be in terms of 
 getting funding. 
 Tech projects could most likely be funded.
 
 
+
 ### Data description
-In this section, you will describe the data set you wish to explore. This includes a description of the observations in the data set, a general description of the variables in the data set, and a description of how the data was originally collected (not how you found the data but how the original curator of the data collected it).
+This data set contains 15 variables and 378,661 observations, where each
+observation is one kickstarter project.
+
+The categorical variables include the name of each project, the category of each
+project (music, narrative film, restaurant, etc.), a broader category of each
+(food, film, publishing, etc.), the crowdsourcing currency, the state of each
+project (failed, successful, or cancelled), and the country of origin for each 
+project.
+
+The numerical data are the project’s ID number, the monetary goal for each, the
+money pledged to each project, how many backers of each project; there are three
+numerical variables that are not self-explanatory, usd_pledged: conversion in US
+dollars of the pledged column (conversion done by kickstarter), usd_pledge_real:
+conversion in US dollars of the pledged column (conversion from Fixer.io API),
+and usd_goal_real: conversion in US dollars of the goal column (conversion from
+Fixer.io API).
+
+There are also two date columns, one for the project launch and the other for
+the crowd sourcing deadline.
+
+The data were collected from Kickstarter Platform, to be used by data scientists
+to possibly model whether or not a project will be successful or not when it is
+launched.
+
 
 ### Glimpse of data
 
