@@ -20,6 +20,7 @@ Our hypotheses include:
 * The more money the project asks for, the less successful it will be in terms of getting funding.
 * The category “Technology” will be the most likely funded type of projects.
 
+<<<<<<< HEAD
 
 ### Data description
 This data set contains 15 variables and 378,661 observations, where each observation is one kickstarter project.
