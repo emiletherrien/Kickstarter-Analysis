@@ -6,18 +6,19 @@ output: pdf_document
 ---
 
 ### Introduction
-The introduction section includes an introduction to the subject matter you’re investigating, the motivation for your research question (citing any relevant literature), the general research question you wish to explore, and your hypotheses regarding the research question of interest.
+Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since launching in 2009, 19 million people have pledged to back up projects, and nearly 190,000 projects have been successfully funded.
+ 
+However, many more projects failed to reach their goals, and our group is interested in analyzing what made projects succeed and fail. The dataset that we use comes from Kaggle, which contains Kickstarter projects up until January 2018.
+ 
+We will be exploring which variables influence the success of a Kickstarter project by observing which types of projects are more likely to be funded. Our questions include:
 
-Introduction:
+* Does the amount of money a project asks for influence it’s chance of success?
+* Does the category of project influence it’s chance of success?
 
-Question of Interest:
+Our hypotheses include:
 
-Our Hypothesis:
-
-The more money the project asks for, the less successful it will be in terms of 
-getting funding. 
-Tech projects could most likely be funded.
-
+* The more money the project asks for, the less successful it will be in terms of getting funding.
+* The category “Technology” will be the most likely funded type of projects.
 
 
 ### Data description
