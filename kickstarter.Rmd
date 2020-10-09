@@ -13,7 +13,8 @@ Introduction:
 Question of Interest:
 
 Our Hypothesis:
-The more money the project asks for, the less successful it will be in terms of getting funding. 
+The more money the project asks for, the less successful it will be in terms of 
+getting funding. 
 Tech projects could most likely be funded.
 
 
