@@ -61,6 +61,23 @@ kickstarter %>%
   summarize(success_rate = n()/nrow(kickstarter))
 ```
 
+Overview of Pledged and Goal
+
+```{r pledged-and-goal-analysis}
+overview_usd_pledged_real <- kickstarter %>%
+  summarize(mean_usd_pledged_real = mean(usd_pledged_real),
+            median_usd_pledged_real = median(usd_pledged_real),
+            sd_usd_pledged_real = sd(usd_pledged_real))
+
+overview_usd_goal_real <- kickstarter %>%
+  summarize(mean_usd_goal_real = mean(usd_goal_real),
+            median_usd_goal_real = median(usd_goal_real),
+            sd_usd_goal_real = sd(usd_goal_real))
+
+overview_usd_pledged_real
+overview_usd_goal_real
+```
+
 ### Emile and Olivia
 
 * Does the category of project influence it’s chance of success?
