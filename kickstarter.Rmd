@@ -59,7 +59,44 @@ glimpse(kickstarter)
 * Does the category of project influence it’s chance of success?
 * The category “Technology” will be the most likely funded type of projects.
 
-```{r e-o}
+limitations: possible crossover in the main_categories that we cannot screen
+for
+
+```{r category-success}
+kickstart_success = kickstarter %>% 
+  mutate(
+    project_funding_ratio = pledged/goal,
+    success = case_when(
+      project_funding_ratio >= 1 ~ "achieved",
+      project_funding_ratio < 1 ~ "not achieved"
+    )
+  )
+
+kickstater_success_ratios = kickstart_success %>% 
+  group_by(success, main_category) %>% 
+  count(success) %>% 
+  mutate(
+    sum = 137042+241619
+  ) %>% 
+  filter(success == "achieved") %>% 
+  mutate(
+    proportion_achieved = n/sum
+  )
+
+kickstater_success_ratios
+  
+  
+
+ggplot(data = kickstart_success, mapping  =  
+         aes(x = success, fill = main_category)) +
+  facet_wrap(main_category ~ .) +
+  geom_histogram(stat = "count") +
+  theme(legend.position = "none")
+
+ggplot(data = kickstater_success_ratios, aes(x = success, y = proportion_achieved, fill = main_category)) +
+  facet_wrap(main_category ~ .) +
+  geom_bar() +
+  theme(legend.position = "none")
 
 ```
 
