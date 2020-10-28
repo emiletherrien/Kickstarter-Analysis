@@ -49,9 +49,16 @@ glimpse(kickstarter)
 * Does the amount of money a project asks for influence it’s chance of success?
 * The more money the project asks for, the less successful it will be in terms of getting funding.
 
+Overview of Project State
 
-```{r v-f}
-  
+```{r state-analysis}
+kickstarter %>%
+  group_by(state) %>%
+  count()
+
+kickstarter %>%
+  filter(state == "successful") %>%
+  summarize(success_rate = n()/nrow(kickstarter))
 ```
 
 ### Emile and Olivia
