@@ -259,9 +259,11 @@ boot_samp %>%
 
 ggplot(data = boot_samp, aes(x = centered)) + 
   geom_histogram(color = "darkblue", fill = "skyblue") +
-  labs(x = "", y = "")
+  labs(x = "centered means", y = "count") +
+  geom_vline(xintercept = diff$prop, color = "red")
 
 ```
 
+We have a p-value of 1, which means there is not sufficient evidence to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
 
 
