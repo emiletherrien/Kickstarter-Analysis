@@ -175,6 +175,26 @@ ggplot(data = kickstater_success_ratios, aes(x = success, y = proportion_achieve
 
 ```
 
+main_category vs. success
+
+$H_0$: There is no relationship between main_category and success.
+
+$H_1$: There is a relationship between main_category and success. 
+
+Where the $alpha/$ = 0.05
+
+```{r CLT-main_category}
+
+chisq.test(table(kickstart_success$main_category, kickstart_success$success))
+
+```
+
+Given that the p-value is less than $alpha/$ = 0.05, we can reject the null hypothesis. Thus, there is sufficient evidence to suggest that there is a relationship between main category and success.
+
+```{r CLT - technology}
+
+
+```
 
 
 
