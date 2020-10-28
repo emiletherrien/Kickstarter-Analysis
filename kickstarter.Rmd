@@ -44,12 +44,9 @@ glimpse(kickstarter)
 
 ```
 
-### Farzeen and Vincent
+### Explorative Data Analysis
 
-* Does the amount of money a project asks for influence it’s chance of success?
-* The more money the project asks for, the less successful it will be in terms of getting funding.
-
-Overview of Project State
+Overview of project state:
 
 ```{r state-analysis}
 kickstarter %>%
@@ -61,9 +58,9 @@ kickstarter %>%
   summarize(success_rate = n()/nrow(kickstarter))
 ```
 
-Overview of Pledged and Goal
+Overview of usd dollars pledged and goal:
 
-```{r pledged-and-goal-analysis}
+```{r pledged-and-goal-overview}
 overview_usd_pledged_real <- kickstarter %>%
   summarize(mean_usd_pledged_real = mean(usd_pledged_real),
             median_usd_pledged_real = median(usd_pledged_real),
@@ -77,6 +74,10 @@ overview_usd_goal_real <- kickstarter %>%
 overview_usd_pledged_real
 overview_usd_goal_real
 ```
+
+### Project Goal Amount & Success
+
+*Claim*: The more money the project asks for, the less successful it will be in terms of getting funding.
 
 ### Emile and Olivia
 
