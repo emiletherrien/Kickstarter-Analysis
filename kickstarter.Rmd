@@ -95,11 +95,21 @@ kickstarter_not_live <- kickstarter %>%
 Create a new variable named usd_goal_real_tier to classify usd_goal_real into tiers:
 
 ```{r mutate-goal-tiers}
-num_tiers <- 10
-
-# ntile() outputs a rough rank, which breaks the input vector into n buckets
+# perhaps need a better way to categorize values in this column
 kickstarter_not_live <- kickstarter_not_live %>%
-  mutate(usd_goal_real_tier = ntile(kickstarter_not_live$usd_goal_real, num_tiers))
+  mutate(usd_goal_real_tier = case_when(
+    usd_goal_real < 1000 ~ 1,
+    usd_goal_real >= 1000 & usd_goal_real < 5000 ~ 2,
+    usd_goal_real >= 5000 & usd_goal_real < 10000 ~ 3,
+    usd_goal_real >= 10000 & usd_goal_real < 20000 ~ 4,
+    usd_goal_real >= 20000 & usd_goal_real < 100000 ~ 5,
+    usd_goal_real >= 100000 & usd_goal_real < 500000 ~ 6,
+    usd_goal_real >= 500000 ~ 7,
+  ))
+
+kickstarter_not_live %>%
+  group_by(usd_goal_real_tier) %>%
+  count()
 ```
 
 Create a new variable for success state
@@ -115,7 +125,7 @@ We'll run a chi-square test at alpha = 0.05.
 chisq.test(table(kickstarter_not_live$success_state, kickstarter_not_live$usd_goal_real_tier))
 ```
 
-Our test statistic was 20009, which has a chi-square distribution with 9 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's goal and a project's state.
+Our test statistic was 19624, which has a chi-square distribution with 6 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's goal and a project's state.
 
 ### Project Goal Amount & Success
 
