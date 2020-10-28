@@ -20,7 +20,7 @@ Our hypotheses include:
 * The more money the project asks for, the less successful it will be in terms of getting funding.
 * The category “Technology” will be the most likely funded type of projects.
 
-<<<<<<< HEAD
+
 
 ### Data description
 This data set contains 15 variables and 378,661 observations, where each observation is one kickstarter project.
@@ -43,4 +43,26 @@ kickstarter <- read_csv("data/ks-projects-201801.csv")
 glimpse(kickstarter)
 
 ```
+
+### Farzeen and Vincent
+
+* Does the amount of money a project asks for influence it’s chance of success?
+* The more money the project asks for, the less successful it will be in terms of getting funding.
+
+
+```{r v-f}
+  
+```
+
+### Emile and Olivia
+
+* Does the category of project influence it’s chance of success?
+* The category “Technology” will be the most likely funded type of projects.
+
+```{r e-o}
+
+```
+
+
+
 
