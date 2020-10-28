@@ -94,7 +94,7 @@ kickstarter_not_live <- kickstarter %>%
 
 Create a new variable named usd_goal_real_tier to classify usd_goal_real into tiers:
 
-```{r mutate-goal-tiers}
+```{r mutate-goal-tiers, warning=FALSE}
 # perhaps need a better way to categorize values in this column
 kickstarter_not_live <- kickstarter_not_live %>%
   mutate(usd_goal_real_tier = case_when(
@@ -107,9 +107,20 @@ kickstarter_not_live <- kickstarter_not_live %>%
     usd_goal_real >= 500000 ~ 7,
   ))
 
-kickstarter_not_live %>%
+chart<- kickstarter_not_live %>%
   group_by(usd_goal_real_tier) %>%
-  count()
+  summarize(numbers = n())
+
+chart
+ 
+ggplot(data = chart, mapping = aes((x = usd_goal_real_tier), y = numbers)) +
+ geom_point () +
+  scale_colour_viridis_d()+
+  labs(title = "number of projects",
+       subtitle = "falling in certain tier",
+       x = "tier number", y = "Count of projects") + theme_classic()
+ 
+
 ```
 
 Create a new variable for success state
@@ -117,7 +128,11 @@ Create a new variable for success state
 ```{r mutate-success-state}
 kickstarter_not_live <- kickstarter_not_live %>%
   mutate(success_state = if_else(state == "successful", 1, 0))
+
+
+
 ```
+
 
 We'll run a chi-square test at alpha = 0.05.
 
