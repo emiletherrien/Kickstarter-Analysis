@@ -166,7 +166,9 @@ kickstater_success_ratios = kickstart_success %>%
 
 kickstater_success_ratios
   
-ggplot(data = kickstater_success_ratios, aes(x = success, y = proportion_achieved, fill = main_category)) +
+ggplot(data = kickstater_success_ratios, aes(x = success, 
+                                             y = proportion_achieved,
+                                             fill = main_category)) +
   facet_wrap(. ~ main_category) +
   geom_col() +
   theme(legend.position = "none") +
@@ -184,14 +186,76 @@ $H_1$: There is a relationship between main_category and success.
 Where the $alpha/$ = 0.05
 
 ```{r CLT-main_category}
-
 chisq.test(table(kickstart_success$main_category, kickstart_success$success))
-
 ```
 
 Given that the p-value is less than $alpha/$ = 0.05, we can reject the null hypothesis. Thus, there is sufficient evidence to suggest that there is a relationship between main category and success.
 
+#### Simulation, tech is the most likely to be funded
+
+$H_0$: $p_{s-tech}$ $\le$ $p_{s-other}$
+$H_1$: $p_{s-tech}$ > $p_{s-other}$
+
 ```{r CLT - technology}
+set.seed(1)
+
+kickstart_boot = kickstart_success %>% 
+  mutate(
+    TECH = case_when(
+      main_category == "Technology" ~ "TECH",
+      main_category != "Technology" ~ "other"
+    )
+  )
+kickstart_boot
+         
+obs_diff = kickstart_boot %>% 
+  group_by(TECH) %>% 
+  count(success) %>% 
+  mutate(prop = n/sum(n)) %>% 
+  filter(success == "achieved") %>% 
+  select(TECH, prop)
+obs_diff
+
+diff = obs_diff[2,2] - obs_diff[1,2] #take second row and second column - ...
+diff
+
+tech = kickstart_boot %>% 
+  filter(TECH == "TECH")
+other = kickstart_boot %>% 
+  filter(TECH != "TECH")
+
+boot_samp <- numeric(10)
+
+for(i in 1:10){
+  boot_tech <- tech %>% 
+    slice(sample(1:nrow(tech), replace = T)) %>% 
+    count(success) %>% 
+    mutate(prop = n/sum(n)) %>% 
+    select(prop) %>% 
+    slice(1) %>%
+    pull()
+  boot_other<- other %>% 
+    slice(sample(1:nrow(other), replace = T)) %>% 
+    count(success) %>% 
+    mutate(prop = n/sum(n)) %>% 
+    select(prop) %>% 
+    slice(1) %>%
+    pull()
+  
+  boot_samp[i] <- boot_tech - boot_other
+}
+
+#mean of bootstrap samples:
+mean_boot = mean(boot_samp)
+boot_samp = tibble(boot_samp)
+
+boot_samp <- boot_samp %>% 
+  mutate(centered = boot_samp + abs(mean_boot))
+       
+boot_samp %>% 
+  mutate(extreme = if_else(centered > abs(diff), 0, 1)
+  ) %>% 
+  summarize(p_val = mean(extreme))
 
 
 ```
