@@ -139,6 +139,11 @@ Our test statistic was 19624, which has a chi-square distribution with 6 degree 
 limitations: possible crossover in the main_categories that we cannot screen
 for
 
+questions for Yue: 
+* how to weight each bar graph the same to show proportionality
+between main categories?
+* how not to hard code sum in kickstarter_success_ratio pipeline
+
 ```{r category-success}
 kickstart_success = kickstarter %>% 
   mutate(
@@ -154,26 +159,19 @@ kickstater_success_ratios = kickstart_success %>%
   count(success) %>% 
   mutate(
     sum = 137042+241619
-  ) %>% 
-  filter(success == "achieved") %>% 
+  )%>% 
   mutate(
     proportion_achieved = n/sum
   )
 
 kickstater_success_ratios
   
-  
-
-ggplot(data = kickstart_success, mapping  =  
-         aes(x = success, fill = main_category)) +
-  facet_wrap(main_category ~ .) +
-  geom_histogram(stat = "count") +
-  theme(legend.position = "none")
-
 ggplot(data = kickstater_success_ratios, aes(x = success, y = proportion_achieved, fill = main_category)) +
-  facet_wrap(main_category ~ .) +
-  geom_bar() +
-  theme(legend.position = "none")
+  facet_wrap(. ~ main_category) +
+  geom_col() +
+  theme(legend.position = "none") +
+  labs(x = "Success",
+       y = "Proportion of successful projects")
 
 ```
 
