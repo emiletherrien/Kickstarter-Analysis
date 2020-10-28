@@ -44,15 +44,92 @@ glimpse(kickstarter)
 
 ```
 
-### Farzeen and Vincent
+### Explorative Data Analysis
 
-* Does the amount of money a project asks for influence it’s chance of success?
-* The more money the project asks for, the less successful it will be in terms of getting funding.
+Overview of project state:
 
+```{r state-analysis}
+kickstarter %>%
+  group_by(state) %>%
+  count()
 
-```{r v-f}
-  
+kickstarter %>%
+  filter(state == "successful") %>%
+  summarize(success_rate = n()/nrow(kickstarter))
 ```
+
+Overview of usd dollars pledged and goal:
+
+```{r pledged-and-goal-overview}
+overview_usd_pledged_real <- kickstarter %>%
+  summarize(mean_usd_pledged_real = mean(usd_pledged_real),
+            median_usd_pledged_real = median(usd_pledged_real),
+            sd_usd_pledged_real = sd(usd_pledged_real))
+
+overview_usd_goal_real <- kickstarter %>%
+  summarize(mean_usd_goal_real = mean(usd_goal_real),
+            median_usd_goal_real = median(usd_goal_real),
+            sd_usd_goal_real = sd(usd_goal_real))
+
+overview_usd_pledged_real
+overview_usd_goal_real
+```
+
+### Project Goal & Success
+
+*Question*: Is the project goal (amount of money a project asks for) associated with whether it is successful?
+
+*Hypotheses*:
+
+* $H_0$: There is no relationship between a project's goal and whether a project is successful or not.
+* $H_1$: There is a relationship between a project's goal and whether a project is successful or not.
+
+Create a new data frame with projects that are no longer live:
+
+```{r exclude-ongoing-projects}
+# Exclude ongoing projects
+kickstarter_not_live <- kickstarter %>%
+  filter(state != "live")
+```
+
+Create a new variable named usd_goal_real_tier to classify usd_goal_real into tiers:
+
+```{r mutate-goal-tiers}
+# perhaps need a better way to categorize values in this column
+kickstarter_not_live <- kickstarter_not_live %>%
+  mutate(usd_goal_real_tier = case_when(
+    usd_goal_real < 1000 ~ 1,
+    usd_goal_real >= 1000 & usd_goal_real < 5000 ~ 2,
+    usd_goal_real >= 5000 & usd_goal_real < 10000 ~ 3,
+    usd_goal_real >= 10000 & usd_goal_real < 20000 ~ 4,
+    usd_goal_real >= 20000 & usd_goal_real < 100000 ~ 5,
+    usd_goal_real >= 100000 & usd_goal_real < 500000 ~ 6,
+    usd_goal_real >= 500000 ~ 7,
+  ))
+
+kickstarter_not_live %>%
+  group_by(usd_goal_real_tier) %>%
+  count()
+```
+
+Create a new variable for success state
+
+```{r mutate-success-state}
+kickstarter_not_live <- kickstarter_not_live %>%
+  mutate(success_state = if_else(state == "successful", 1, 0))
+```
+
+We'll run a chi-square test at alpha = 0.05.
+
+```{r goal-state-association}
+chisq.test(table(kickstarter_not_live$success_state, kickstarter_not_live$usd_goal_real_tier))
+```
+
+Our test statistic was 19624, which has a chi-square distribution with 6 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's goal and a project's state.
+
+### Project Goal Amount & Success
+
+*Claim*: The more money the project asks for, the less successful it will be in terms of getting funding.
 
 ### Emile and Olivia
 
