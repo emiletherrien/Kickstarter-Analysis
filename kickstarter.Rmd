@@ -5,6 +5,22 @@ author: "The Laureates: Farzeen Najam, Olivia Olsher, Vincent Liu, Emile Therrie
 output: pdf_document
 ---
 
+### Notes for our group moving forward: to be included along with rough draft comments
+
+Need to change the first data analysis to pledged over real because the "state"
+variable has too many qualifiers that might neglect certain succesful obs
+even though they weren't listed as "successful"
+
+In Emile and Olivia's part, exclude the live data
+
+For Farzeen: need to explain why you chose certain variables and how you then
+incorporated those into your hypo test
+-why omit tier 7?
+
+Emile and olivia: need to see what category is most likely to be funded
+  what should the size of sample for the bootstraps be?
+  use regression to model this? what sort of regression?
+
 ### Introduction
 Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since launching in 2009, 19 million people have pledged to back up projects, and nearly 190,000 projects have been successfully funded.
  
@@ -140,7 +156,7 @@ We'll run a chi-square test at alpha = 0.05.
 chisq.test(table(kickstarter_not_live$success_state, kickstarter_not_live$usd_goal_real_tier))
 ```
 
-Our test statistic was 19624, which has a chi-square distribution with 6 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's goal and a project's state.
+Our test statistic was 19624, which has a chi-square distribution with 6 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's monetary goal and a project's state of success.
 
 ### Project Goal Amount & Success
 
@@ -223,10 +239,10 @@ higher than projects with lower money.
 
 
 
-### Emile and Olivia
+### Project Category and Success
 
-* Does the category of project influence it’s chance of success?
-* The category “Technology” will be the most likely funded type of projects.
+* Is the category associated with the chance of success a project has?
+* The category “Technology” will be the most likely funded type of project.
 
 limitations: possible crossover in the main_categories that we cannot screen
 for
@@ -288,7 +304,7 @@ Given that the p-value is less than $alpha/$ = 0.05, we can reject the null hypo
 $H_0$: $p_{s-tech}$ $\le$ $p_{s-other}$
 $H_1$: $p_{s-tech}$ > $p_{s-other}$
 
-```{r CLT - technology}
+```{r simulation - technology}
 set.seed(1)
 
 kickstart_boot = kickstart_success %>% 
@@ -356,6 +372,6 @@ ggplot(data = boot_samp, aes(x = centered)) +
 
 ```
 
-We have a p-value of 1, which means there is not sufficient evidence to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
+We have a p-value of 1, which means there is not sufficient evidence at the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
 
 
