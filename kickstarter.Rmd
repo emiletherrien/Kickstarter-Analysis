@@ -146,6 +146,83 @@ Our test statistic was 19624, which has a chi-square distribution with 6 degree 
 
 *Claim*: The more money the project asks for, the less successful it will be in terms of getting funding.
 
+$H_0$: $S_{less-money}$ $\le$ $S_{more-money}$
+$H_1$: $S_{less-money}$ > $S_{more-money}$
+
+$H_0$:proportion of people who successful with low money goal - proportion of people who successful with high money <= 0
+$H_1$: proportion of people who successful with low money goal - proportion of people who successful with high money > 0 
+
+$\alpha$ = 0.05
+
+
+```{r}
+set.seed(2)
+     kick1 <- kickstarter_not_live %>% 
+       filter(usd_goal_real_tier == 6 | usd_goal_real_tier == 5 | usd_goal_real_tier ==4)
+     
+     kick2 <- kickstarter_not_live %>%
+        filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | usd_goal_real_tier ==3)
+       
+n_sims <- 500
+boot_dist <- numeric(n_sims)
+for(i in 1:n_sims){
+  
+  # create indices
+  indices_m <- sample(1:nrow(kick1), replace = T)
+  indices_l <- sample(1:nrow(kick2), replace = T)
+  
+  
+  # bootstrap est. group means
+  temp_m <- kick1 %>% 
+    slice(indices_m) %>% 
+    filter(success_state == 1) %>%
+    summarize(prop_m = n()/ 141243) %>% 
+    select(prop_m) %>% 
+    pull()
+  
+
+  temp_l <-kick2  %>% 
+    slice(indices_l) %>% 
+    filter(success_state == 1) %>%
+    summarize(prop_s= n()/231825) %>% 
+    select(prop_s) %>% 
+    pull()
+
+  boot_dist[i] <-   temp_l - temp_m   #diff btw low goal success high goal success
+}
+boot_diffs <- tibble(diffs = boot_dist)
+
+
+obs_diff <- boot_diffs %>% 
+  summarize(obs_diff = mean(diffs)) %>% 
+  pull()
+
+offset <- boot_diffs %>% 
+  summarize(offset = 0 - mean(diffs)) %>% 
+  pull()
+null_dist <- boot_diffs %>% 
+  mutate(centered_diffs = diffs + offset) %>% 
+  select(centered_diffs)
+
+null_dist %>% 
+  mutate(extreme = ifelse(centered_diffs > abs(obs_diff), 1, 0)) %>% 
+  summarize(p_val = mean(extreme))
+
+
+boot_diffs %>% 
+  summarize(lower = quantile(diffs, 0.025),
+            upper = quantile(diffs, 0.975))
+ 
+
+```
+Since our p-value is less than our alpha value, we reject our null hypothesis that
+the difference in the proportion of projects with less money as goal and proportion
+of projects with more money as goal is less than or equal to 0.This means we reject
+the null hypothesis that success rate for projects with bigger money is equal or
+higher than projects with lower money.
+
+
+
 ### Emile and Olivia
 
 * Does the category of project influence it’s chance of success?
