@@ -21,7 +21,7 @@ Emile and olivia: need to see what category is most likely to be funded
   what should the size of sample for the bootstraps be?
   use regression to model this? what sort of regression?
 
-### Introduction
+# Introduction
 Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since launching in 2009, 19 million people have pledged to back up projects, and nearly 190,000 projects have been successfully funded.
  
 However, many more projects failed to reach their goals, and our group is interested in analyzing what made projects succeed and fail. The dataset that we use comes from Kaggle, which contains Kickstarter projects up until January 2018.
@@ -38,7 +38,7 @@ Our hypotheses include:
 
 
 
-### Data description
+# Data description
 This data set contains 15 variables and 378,661 observations, where each observation is one kickstarter project.
 
 The categorical variables include the name of each project, the category of each project (music, narrative film, restaurant, etc.), a broader category of each (food, film, publishing, etc.), the crowdsourcing currency, the state of each project (failed, successful, or cancelled), and the country of origin for each project.
@@ -50,9 +50,9 @@ There are also two date columns, one for the project launch and the other for th
 The data were collected from Kickstarter Platform likely using web scraping methods on their own site, to be used by data scientists to model whether or not a project will be successful or not when it is launched.
 
 
-### Glimpse of data
+# Glimpse of data
 
-```{r file-glimpse, eval=TRUE, warning=FALSE, message=FALSE}
+```{r file-glimpse, eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
 
 kickstarter <- read_csv("data/ks-projects-201801.csv")
@@ -60,35 +60,51 @@ glimpse(kickstarter)
 
 ```
 
-### Explorative Data Analysis
+# Explorative Data Analysis
 
-Overview of project state:
+### Overview of project state:
 
 ```{r state-analysis}
-kickstarter %>%
+kickstarter_intro = kickstarter %>%
   group_by(state) %>%
   count()
 
-kickstarter %>%
+kickstarter_intro2 = kickstarter %>%
   filter(state == "successful") %>%
-  summarize(success_rate = n()/nrow(kickstarter))
+  summarize("project success rate" = n()/nrow(kickstarter))
+
+
+kickstarter_intro
+kickstarter_intro2
 ```
 
-Overview of usd dollars pledged and goal:
+### Overview of pledged and goal money in USD:
 
-```{r pledged-and-goal-overview}
+```{r pledged-and-goal-overview, echo=FALSE}
 overview_usd_pledged_real <- kickstarter %>%
-  summarize(mean_usd_pledged_real = mean(usd_pledged_real),
-            median_usd_pledged_real = median(usd_pledged_real),
-            sd_usd_pledged_real = sd(usd_pledged_real))
+  summarize(mean = mean(usd_pledged_real),
+            median = median(usd_pledged_real),
+            sd = sd(usd_pledged_real)) %>% 
+  mutate(type = "pledged")
 
 overview_usd_goal_real <- kickstarter %>%
-  summarize(mean_usd_goal_real = mean(usd_goal_real),
-            median_usd_goal_real = median(usd_goal_real),
-            sd_usd_goal_real = sd(usd_goal_real))
+  summarize(
+    mean = mean(usd_goal_real),
+    median = median(usd_goal_real),
+    sd = sd(usd_goal_real)
+    )%>% 
+  mutate(type = "goal")
 
 overview_usd_pledged_real
 overview_usd_goal_real
+
+pledged_goals = full_join(overview_usd_pledged_real, overview_usd_goal_real,
+                          by = NULL)
+
+ggplot(data = pledged_goals, aes(x = type, y = mean,
+                                 fill = type)) +
+  scale_fill_viridis_d()+
+  geom_col()
 ```
 
 ### Project Goal & Success
@@ -129,12 +145,14 @@ chart<- kickstarter_not_live %>%
 
 chart
  
-ggplot(data = chart, mapping = aes((x = usd_goal_real_tier), y = numbers)) +
- geom_point () +
-  scale_colour_viridis_d()+
-  labs(title = "number of projects",
-       subtitle = "falling in certain tier",
-       x = "tier number", y = "Count of projects") + theme_classic()
+ggplot(data = chart, mapping = aes(x = usd_goal_real_tier, y = numbers, 
+                                  fill = as.factor(usd_goal_real_tier))) +
+  geom_col() +
+  scale_fill_viridis_d()+
+  labs(title = "Tier 2 has the most amount of projects",
+       x = "Tier number", y = "Count of projects") +
+  theme_minimal() + 
+  theme(legend.position = "none")
  
 
 ```
@@ -144,16 +162,13 @@ Create a new variable for success state
 ```{r mutate-success-state}
 kickstarter_not_live <- kickstarter_not_live %>%
   mutate(success_state = if_else(state == "successful", 1, 0))
-
-
-
 ```
-
 
 We'll run a chi-square test at alpha = 0.05.
 
 ```{r goal-state-association}
-chisq.test(table(kickstarter_not_live$success_state, kickstarter_not_live$usd_goal_real_tier))
+chisq.test(table(kickstarter_not_live$success_state, 
+                 kickstarter_not_live$usd_goal_real_tier))
 ```
 
 Our test statistic was 19624, which has a chi-square distribution with 6 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's monetary goal and a project's state of success.
@@ -174,10 +189,12 @@ $\alpha$ = 0.05
 ```{r}
 set.seed(2)
      kick1 <- kickstarter_not_live %>% 
-       filter(usd_goal_real_tier == 6 | usd_goal_real_tier == 5 | usd_goal_real_tier ==4)
+       filter(usd_goal_real_tier == 6 | usd_goal_real_tier == 5 | 
+                usd_goal_real_tier ==4)
      
      kick2 <- kickstarter_not_live %>%
-        filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | usd_goal_real_tier ==3)
+        filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | 
+                 usd_goal_real_tier ==3)
        
 n_sims <- 500
 boot_dist <- numeric(n_sims)
@@ -247,41 +264,38 @@ higher than projects with lower money.
 limitations: possible crossover in the main_categories that we cannot screen
 for
 
-questions for Yue: 
-* how to weight each bar graph the same to show proportionality
-between main categories?
-* how not to hard code sum in kickstarter_success_ratio pipeline
-
 ```{r category-success}
 kickstart_success = kickstarter %>% 
   mutate(
     project_funding_ratio = pledged/goal,
     success = case_when(
-      project_funding_ratio >= 1 ~ "achieved",
-      project_funding_ratio < 1 ~ "not achieved"
+      project_funding_ratio >= 1 ~ "Achieved",
+      project_funding_ratio < 1 ~ "Not achieved"
     )
   )
 
 kickstater_success_ratios = kickstart_success %>% 
-  group_by(success, main_category) %>% 
+  group_by(main_category, success) %>% 
   count(success) %>% 
+  group_by(main_category) %>% 
   mutate(
-    sum = 137042+241619
-  )%>% 
-  mutate(
-    proportion_achieved = n/sum
-  )
+    prop = n/sum(n)
+  ) 
 
 kickstater_success_ratios
   
 ggplot(data = kickstater_success_ratios, aes(x = success, 
-                                             y = proportion_achieved,
+                                             y = prop,
                                              fill = main_category)) +
+  ylim(0, 1)+
   facet_wrap(. ~ main_category) +
   geom_col() +
   theme(legend.position = "none") +
   labs(x = "Success",
-       y = "Proportion of successful projects")
+       y = "Proportion of successful projects",
+       title = "All project categories had a greater unsuccessful proportion",
+       subtitle = "Except for Comics, Dance, and Theater")+
+  scale_fill_viridis_d()
 
 ```
 
