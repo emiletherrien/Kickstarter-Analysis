@@ -177,8 +177,8 @@ $H_1$: $S_{less-money}$ > $S_{more-money}$
 * “proportion of people who successful with low money goal." was initially difficult to follow/understand exactly what you are trying to test.
 * in the analysis paragraphs following the tests, including the actual p-value found and the alpha level it was tested against is information that is necessary. This was present in some tests, but was missing in the project goal amount and success section. As an example of how this specifically could be improved, in the project goal amount and success section, you may wish to support your claim of “our p-value is less than our alpha value” with the actual p-value you calculate and the alpha value you are testing in. Additionally, when there is sufficient evidence to reject the null hypothesis, make a statement about how this means there is sufficient evidence to claim that the alternative is true. This sentence will help bridge the two conclusions made. In the analysis for the project category and success section, it may be clearer to use a word other than “main category” in the hypothesis test conclusion (i.e. say project of category or something more specific in the context of the research than simply what the variable is named in the dataset).
 * Each bootstrap analysis is only performed with the number of simulations being set to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
-* why is the seed 2?
-* explain why you chose certain variables and how you then incorporated those into your hypo test -why omit tier 7?
+
+* explain why you chose certain variables and how you then incorporated those into your hypo test
 * express the hypotheses in notation and then explain the notation's meaning.
 
 $H_0$:proportion of people who successful with low money goal - proportion of people who successful with high money <= 0
@@ -190,11 +190,11 @@ $\alpha$ = 0.05
 set.seed(2)
      kick1 <- kickstarter_not_live %>% 
        filter(usd_goal_real_tier == 6 | usd_goal_real_tier == 5 | 
-                usd_goal_real_tier ==4)
+                usd_goal_real_tier == 4 | usd_goal_real_tier == 7)
      
      kick2 <- kickstarter_not_live %>%
         filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | 
-                 usd_goal_real_tier ==3)
+                 usd_goal_real_tier == 3)
        
 n_sims <- 500
 boot_dist <- numeric(n_sims)
@@ -267,7 +267,7 @@ between main categories?
 * need to see what category is most likely to be funded (Emile wrote this a week ago... not sure what it means now)
 
 ```{r category-success}
-kickstart_success = kickstarter %>% 
+kickstart_success = kickstarter_not_live %>% 
   mutate(
     project_funding_ratio = pledged/goal,
     success = case_when(
@@ -342,8 +342,8 @@ set.seed(1)
 kickstart_boot = kickstart_success %>% 
   mutate(
     TECH = case_when(
-      main_category == "Technology" ~ "TECH",
-      main_category != "Technology" ~ "other"
+      main_category == "Technology" ~ "1",
+      main_category != "Technology" ~ "0"
     )
   )
 kickstart_boot
@@ -360,58 +360,67 @@ diff = obs_diff[2,2] - obs_diff[1,2] #take second row and second column - ...
 diff
 
 tech = kickstart_boot %>% 
-  filter(TECH == "TECH")
+  filter(TECH == "1")
 other = kickstart_boot %>% 
-  filter(TECH != "TECH")
+  filter(TECH == "0")
 
-boot_samp <- numeric(500)
+t.test(kickstart_boot$TECH, mu = 0, alternative = "less")
 
-for(i in 1:500){
-  boot_tech <- tech %>% 
-    slice(sample(1:nrow(tech), replace = T)) %>% 
-    count(success) %>% 
-    mutate(prop = n/sum(n)) %>% 
-    select(prop) %>% 
-    slice(1) %>%
-    pull()
-  boot_other<- other %>% 
-    slice(sample(1:nrow(other), replace = T)) %>% 
-    count(success) %>% 
-    mutate(prop = n/sum(n)) %>% 
-    select(prop) %>% 
-    slice(1) %>%
-    pull()
-  
-  boot_samp[i] <- boot_tech - boot_other
-}
+# boot_samp <- numeric(500)
+# 
+# for(i in 1:500){
+#   boot_tech <- tech %>% 
+#     slice(sample(1:nrow(tech), replace = T)) %>% 
+#     count(success) %>% 
+#     mutate(prop = n/sum(n)) %>% 
+#     select(prop) %>% 
+#     slice(1) %>%
+#     pull()
+#   boot_other<- other %>% 
+#     slice(sample(1:nrow(other), replace = T)) %>% 
+#     count(success) %>% 
+#     mutate(prop = n/sum(n)) %>% 
+#     select(prop) %>% 
+#     slice(1) %>%
+#     pull()
+#   
+#   boot_samp[i] <- boot_tech - boot_other
+# }
+# 
+# #mean of bootstrap samples:
+# mean_boot = mean(boot_samp)
+# boot_samp = tibble(boot_samp)
+# 
+# 
+# boot_samp <- boot_samp %>% 
+#   mutate(centered = boot_samp + abs(mean_boot))
+#        
+# boot_samp %>% 
+#   mutate(extreme = if_else(centered > abs(diff), 0, 1)
+#   ) %>% 
+#   summarize(p_val = mean(extreme))
 
-#mean of bootstrap samples:
-mean_boot = mean(boot_samp)
-boot_samp = tibble(boot_samp)
-
-
-boot_samp <- boot_samp %>% 
-  mutate(centered = boot_samp + abs(mean_boot))
-       
-boot_samp %>% 
-  mutate(extreme = if_else(centered > abs(diff), 0, 1)
-  ) %>% 
-  summarize(p_val = mean(extreme))
-
-ggplot(data = boot_samp, aes(x = centered)) + 
-  geom_histogram(color = "darkblue", fill = "skyblue") +
-  labs(x = "centered means", y = "count") +
-  geom_vline(xintercept = diff$prop, color = "red")
+# ggplot(data = boot_samp, aes(x = centered)) + 
+#   geom_histogram(color = "darkblue", fill = "skyblue") +
+#   labs(x = "centered means", y = "count") +
+#   geom_vline(xintercept = diff$prop, color = "red")
 ```
 
 We have a p-value of 1, which means there is not sufficient evidence at the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
 
 ## Project Goal Amount and Pledge Amount
 
+```{r models}
+goal_pledge_mod = lm(success ~ goal data = kickstart_success)
+```
+
+
 **TODO**
 
-* Come up with a question or claim to study. Doesn't have to be goal amount vs pledge. Can also relate to # backers.
+* goal amount vs pledge
+* categories as interaction effects?
 * use regression model
+* linear model for number of backers and pledged amount
 
 # Discussion
 
