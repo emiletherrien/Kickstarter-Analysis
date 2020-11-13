@@ -7,9 +7,19 @@ output: pdf_document
 
 **Notes for our group moving forward: to be included along with rough draft comments**
 
-* Unify the standard to define what is successful. "Pledged over real" among all states except those are "live". Explain why not using the "state" variable, because it has too many qualifiers that might neglect certain successful obs even though they weren't listed as "successful".
-* What should the size of sample for the bootstraps be?
-* How to distribute work?
+Unify the standard to define what is successful. 
+* Drop those columns that are "live"
+* "Pledged over real"
+* "Successful (other anaylyses also use this standard)
+
+How do we sample and what should the size of sample for the bootstraps be?
+
+How to distribute work?
+
+* More work on explorative data analysis
+* Can work on Methodology & Discussion together.
+* Lots of changes needed for each section, but do we need to keep each section? Is every question meaningful? What do we cut so that in this report we can demonstrate nearly all techniques learned from class? 
+* We need to use linear regression for the second to the last section
 
 # Introduction
 Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since launching in 2009, 19 million people have pledged to back up projects, and nearly 190,000 projects have been successfully funded.
@@ -24,7 +34,7 @@ We will be exploring which variables influence the success of a Kickstarter proj
 Our hypotheses include:
 
 * The more money the project asks for, the less successful it will be in terms of getting funding.
-* The category “Technology” will be the most likely funded type of projects.
+* The project category is associated with the success rate, and “Technology” will be the most likely funded type of projects compared to others.
 
 # Data Description
 
@@ -59,7 +69,6 @@ kickstarter_intro = kickstarter %>%
 kickstarter_intro2 = kickstarter %>%
   filter(state == "successful") %>%
   summarize("project success rate" = n()/nrow(kickstarter))
-
 
 kickstarter_intro
 kickstarter_intro2
@@ -103,20 +112,14 @@ ggplot(data = pledged_goals, aes(x = type, y = mean,
 
 # Data Analysis
 
-## Project Goal and Success
+## Project Goal Amount and Success
+
+*Claim*: The more money the project asks for (project goal), the less successful it will be in terms of getting funding.
 
 **TODO**: 
 
-* describe and justify why you ran a chi-squared test and what information this test will provide you in context of supporting your larger question/hypotheses. There could also be greater explanation of the individual steps you took before completing the overall chi-squared test: for instance, you could explain/justify the specific variables you chose to include such as “used_goal_real_tier”--what does this variable mean and how does the classification into tiers with your mutated variable relate to the larger analysis on goal v. success rate? This will make it easier for the reader to follow along and allow you to have methods with enough detail such that they can be reproducible.
-* in the “project goals and success” section, you say that “this means we reject the null hypothesis that success rates for projects with bigger money is equal or higher than projects with lower money.” Saying you have enough evidence to reject the null is good, but it’s also useful to say that you have sufficient evidence to suggest that your alternative hypothesis is true.
-* explain how tiers were defined. rationale.
-
-*Question*: Is the project goal (amount of money a project asks for) associated with whether it is successful?
-
-*Hypotheses*:
-
-* $H_0$: There is no relationship between a project's goal and whether a project is successful or not.
-* $H_1$: There is a relationship between a project's goal and whether a project is successful or not.
+* add some context here why we examine this relationship
+* you could explain/justify the specific variables you chose to include such as “used_goal_real_tier”--what does this variable mean and how does the classification into tiers with your mutated variable relate to the larger analysis on goal v. success rate? This will make it easier for the reader to follow along and allow you to have methods with enough detail such that they can be reproducible. Explain how tiers were defined. rationale.
 
 Create a new data frame with projects that are no longer live:
 
@@ -164,18 +167,7 @@ kickstarter_not_live <- kickstarter_not_live %>%
   mutate(success_state = if_else(state == "successful", 1, 0))
 ```
 
-We'll run a chi-square test at alpha = 0.05.
-
-```{r goal-state-association}
-chisq.test(table(kickstarter_not_live$success_state, 
-                 kickstarter_not_live$usd_goal_real_tier))
-```
-
-Our test statistic was 19624, which has a chi-square distribution with 6 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's monetary goal and a project's state of success.
-
-## Project Goal Amount and Success
-
-*Claim*: The more money the project asks for, the less successful it will be in terms of getting funding.
+*Hypotheses*:
 
 $H_0$: $S_{less-money}$ $\le$ $S_{more-money}$
 $H_1$: $S_{less-money}$ > $S_{more-money}$
@@ -259,6 +251,8 @@ Since our p-value is less than our alpha value, we reject our null hypothesis th
 
 ## Project Category and Success
 
+### Relationship between Project Category and Success
+
 *Question*: Does the category of project influence it’s chance of success?
 
 **TODO**
@@ -316,18 +310,20 @@ $H_1$: There is a relationship between main_category and success.
 
 Where the $alpha/$ = 0.05
 
-```{r CLT-main_category}
+```{r chi-square-main_category}
 chisq.test(table(kickstart_success$main_category, kickstart_success$success))
 ```
 
 **TODO**:
 
 * state the p-value here
+* describe and justify why you ran a chi-squared test and what information this test will provide you in context of supporting your larger question/hypotheses. There could also be greater explanation of the individual steps you took before completing the overall chi-squared test
 * when there is sufficient evidence to reject the null hypothesis, make a statement about how this means there is sufficient evidence to claim that the alternative is true. This sentence will help bridge the two conclusions made. In the analysis for the project category and success section, it may be clearer to use a word other than “main category” in the hypothesis test conclusion (i.e. say project of category or something more specific in the context of the research than simply what the variable is named in the dataset). 
+* Interpretation of chi-square test could follow a format like this: "Our test statistic was 19624, which has a chi-square distribution with 6 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's monetary goal and a project's state of success."
 
 Given that the p-value is less than $alpha/$ = 0.05, we can reject the null hypothesis. Thus, there is sufficient evidence to suggest that there is a relationship between main category and success.
 
-## Technology Category vs. Others
+### Success Rate of Technology Category vs. Others
 
 *Claim*: The category “Technology” will be the most likely funded type of projects.
 
@@ -406,7 +402,6 @@ ggplot(data = boot_samp, aes(x = centered)) +
   geom_histogram(color = "darkblue", fill = "skyblue") +
   labs(x = "centered means", y = "count") +
   geom_vline(xintercept = diff$prop, color = "red")
-
 ```
 
 We have a p-value of 1, which means there is not sufficient evidence at the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
@@ -415,6 +410,7 @@ We have a p-value of 1, which means there is not sufficient evidence at the $\al
 
 **TODO**
 
+* Come up with a question or claim to study. Doesn't have to be goal amount vs pledge. Can also relate to # backers.
 * use regression model
 
 # Discussion
