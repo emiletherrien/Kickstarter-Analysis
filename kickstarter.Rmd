@@ -5,7 +5,17 @@ author: "The Laureates: Farzeen Najam, Olivia Olsher, Vincent Liu, Emile Therrie
 output: pdf_document
 ---
 
-### Introduction
+**Notes for our group moving forward: to be included along with rough draft comments**
+
+* Need to change the first data analysis to pledged over real because the "state" variable has too many qualifiers that might neglect certain succesful obs even though they weren't listed as "successful"
+* In Emile and Olivia's part, exclude the live data
+* For Farzeen: need to explain why you chose certain variables and how you then
+incorporated those into your hypo test -why omit tier 7?
+* Emile and olivia: need to see what category is most likely to be funded
+* what should the size of sample for the bootstraps be?
+* use regression to model this? what sort of regression?
+
+# Introduction
 Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since launching in 2009, 19 million people have pledged to back up projects, and nearly 190,000 projects have been successfully funded.
  
 However, many more projects failed to reach their goals, and our group is interested in analyzing what made projects succeed and fail. The dataset that we use comes from Kaggle, which contains Kickstarter projects up until January 2018.
@@ -20,7 +30,15 @@ Our hypotheses include:
 * The more money the project asks for, the less successful it will be in terms of getting funding.
 * The category “Technology” will be the most likely funded type of projects.
 
-### Data description
+# Data description
+
+```{r file-glimpse, eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+
+kickstarter <- read_csv("data/ks-projects-201801.csv")
+glimpse(kickstarter)
+```
+
 This data set contains 15 variables and 378,661 observations, where each observation is one kickstarter project.
 
 The categorical variables include the name of each project, the category of each project (music, narrative film, restaurant, etc.), a broader category of each (food, film, publishing, etc.), the crowdsourcing currency, the state of each project (failed, successful, or cancelled), and the country of origin for each project.
@@ -31,53 +49,64 @@ There are also two date columns, one for the project launch and the other for th
 
 The data were collected from Kickstarter Platform likely using web scraping methods on their own site, to be used by data scientists to model whether or not a project will be successful or not when it is launched.
 
-### Glimpse of data
-
-```{r file-glimpse, eval=TRUE, warning=FALSE, message=FALSE}
-library(tidyverse)
-
-kickstarter <- read_csv("data/ks-projects-201801.csv")
-glimpse(kickstarter)
-```
-
-### Explorative Data Analysis
+# Explorative Data Analysis
 
 **TODO**: In the exploratory data analysis section, it would be useful to add a bar chart for the counts of the project states to visually represent that summary
 
-Overview of project state:
+## Overview of project state:
 
 ```{r state-analysis}
-kickstarter %>%
+kickstarter_intro = kickstarter %>%
   group_by(state) %>%
   count()
 
-kickstarter %>%
+kickstarter_intro2 = kickstarter %>%
   filter(state == "successful") %>%
-  summarize(success_rate = n()/nrow(kickstarter))
+  summarize("project success rate" = n()/nrow(kickstarter))
+
+
+kickstarter_intro
+kickstarter_intro2
 ```
 
-Overview of usd dollars pledged and goal:
+## Overview of pledged and goal money in USD:
 
-```{r pledged-and-goal-overview}
+```{r pledged-and-goal-overview, echo=FALSE}
 overview_usd_pledged_real <- kickstarter %>%
-  summarize(mean_usd_pledged_real = mean(usd_pledged_real),
-            median_usd_pledged_real = median(usd_pledged_real),
-            sd_usd_pledged_real = sd(usd_pledged_real))
+  summarize(mean = mean(usd_pledged_real),
+            median = median(usd_pledged_real),
+            sd = sd(usd_pledged_real)) %>% 
+  mutate(type = "pledged")
 
 overview_usd_goal_real <- kickstarter %>%
-  summarize(mean_usd_goal_real = mean(usd_goal_real),
-            median_usd_goal_real = median(usd_goal_real),
-            sd_usd_goal_real = sd(usd_goal_real))
+  summarize(
+    mean = mean(usd_goal_real),
+    median = median(usd_goal_real),
+    sd = sd(usd_goal_real)
+    )%>% 
+  mutate(type = "goal")
 
 overview_usd_pledged_real
 overview_usd_goal_real
+
+pledged_goals = full_join(overview_usd_pledged_real, overview_usd_goal_real,
+                          by = NULL)
+
+ggplot(data = pledged_goals, aes(x = type, y = mean,
+                                 fill = type)) +
+  scale_fill_viridis_d()+
+  geom_col()
 ```
 
-### Methodology
+# Methodology
 
-**TODO**: For the methodology section, it is also essential to justify the statistical methods that you will be using in your analyses to answer your research question, so that researchers go into the results section with no doubts about the appropriateness of your choices.
+**TODO**: 
+* State how we sample our data
+* For the methodology section, it is also essential to justify the statistical methods that you will be using in your analyses to answer your research question, so that researchers go into the results section with no doubts about the appropriateness of your choices.
 
-### Project Goal and Success
+# Data Analysis
+
+## Project Goal and Success
 
 **TODO**: 
 
@@ -119,13 +148,15 @@ chart<- kickstarter_not_live %>%
   summarize(numbers = n())
 
 chart
- 
-ggplot(data = chart, mapping = aes((x = usd_goal_real_tier), y = numbers)) +
- geom_point () +
-  scale_colour_viridis_d()+
-  labs(title = "number of projects",
-       subtitle = "falling in certain tier",
-       x = "tier number", y = "Count of projects") + theme_classic()
+
+ggplot(data = chart, mapping = aes(x = usd_goal_real_tier, y = numbers, 
+                                  fill = as.factor(usd_goal_real_tier))) +
+  geom_col() +
+  scale_fill_viridis_d()+
+  labs(title = "Tier 2 has the most amount of projects",
+       x = "Tier number", y = "Count of projects") +
+  theme_minimal() + 
+  theme(legend.position = "none")
 ```
 
 Create a new variable for success state
@@ -138,12 +169,13 @@ kickstarter_not_live <- kickstarter_not_live %>%
 We'll run a chi-square test at alpha = 0.05.
 
 ```{r goal-state-association}
-chisq.test(table(kickstarter_not_live$success_state, kickstarter_not_live$usd_goal_real_tier))
+chisq.test(table(kickstarter_not_live$success_state, 
+                 kickstarter_not_live$usd_goal_real_tier))
 ```
 
-Our test statistic was 19624, which has a chi-square distribution with 6 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's goal and a project's state.
+Our test statistic was 19624, which has a chi-square distribution with 6 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's monetary goal and a project's state of success.
 
-### Project Goal Amount and Success
+## Project Goal Amount and Success
 
 *Claim*: The more money the project asks for, the less successful it will be in terms of getting funding.
 
@@ -164,10 +196,12 @@ $\alpha$ = 0.05
 ```{r}
 set.seed(2)
      kick1 <- kickstarter_not_live %>% 
-       filter(usd_goal_real_tier == 6 | usd_goal_real_tier == 5 | usd_goal_real_tier ==4)
+       filter(usd_goal_real_tier == 6 | usd_goal_real_tier == 5 | 
+                usd_goal_real_tier ==4)
      
      kick2 <- kickstarter_not_live %>%
-        filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | usd_goal_real_tier ==3)
+        filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | 
+                 usd_goal_real_tier ==3)
        
 n_sims <- 500
 boot_dist <- numeric(n_sims)
@@ -222,7 +256,7 @@ boot_diffs %>%
 
 Since our p-value is less than our alpha value, we reject our null hypothesis that the difference in the proportion of projects with less money as goal and proportion of projects with more money as goal is less than or equal to 0.This means we reject the null hypothesis that success rate for projects with bigger money is equal or higher than projects with lower money.
 
-### Project Category and Success
+## Project Category and Success
 
 *Question*: Does the category of project influence it’s chance of success?
 
@@ -241,32 +275,34 @@ kickstart_success = kickstarter %>%
   mutate(
     project_funding_ratio = pledged/goal,
     success = case_when(
-      project_funding_ratio >= 1 ~ "achieved",
-      project_funding_ratio < 1 ~ "not achieved"
+      project_funding_ratio >= 1 ~ "Achieved",
+      project_funding_ratio < 1 ~ "Not achieved"
     )
   )
 
 kickstater_success_ratios = kickstart_success %>% 
-  group_by(success, main_category) %>% 
+  group_by(main_category, success) %>% 
   count(success) %>% 
+  group_by(main_category) %>% 
   mutate(
-    sum = 137042+241619
-  )%>% 
-  mutate(
-    proportion_achieved = n/sum
-  )
+    prop = n/sum(n)
+  ) 
 
 kickstater_success_ratios
   
-ggplot(data = kickstater_success_ratios,
-       aes(x = success,
-           y = proportion_achieved,
-           fill = main_category)) +
+
+ggplot(data = kickstater_success_ratios, aes(x = success, 
+                                             y = prop,
+                                             fill = main_category)) +
+  ylim(0, 1) +
   facet_wrap(. ~ main_category) +
   geom_col() +
   theme(legend.position = "none") +
   labs(x = "Success",
-       y = "Proportion of successful projects")
+       y = "Proportion of successful projects",
+       title = "All project categories had a greater unsuccessful proportion",
+       subtitle = "Except for Comics, Dance, and Theater")+
+  scale_fill_viridis_d()
 
 ```
 
@@ -289,7 +325,7 @@ chisq.test(table(kickstart_success$main_category, kickstart_success$success))
 
 Given that the p-value is less than $alpha/$ = 0.05, we can reject the null hypothesis. Thus, there is sufficient evidence to suggest that there is a relationship between main category and success.
 
-### Technology Category vs. Others
+## Technology Category vs. Others
 
 *Claim*: The category “Technology” will be the most likely funded type of projects.
 
@@ -302,7 +338,7 @@ $H_1$: $p_{s-tech}$ > $p_{s-other}$
 * Each bootstrap analysis is only performed with the number of simulations being set to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
 * For the project category and success section, although the approach and model of analysis are clear, we believe that a p-value of 1 may be unlikely. In your histogram, the observed difference line is so far from the simulated null distribution that observing that proportion under the null distribution seems very unlikely, at least a probability less than 1. Regardless, in order to make the model more clear, that last histogram should be labeled a lot better, with a title about whether this rejects or fails to reject the null, the number of simulations used for bootstrapping, and what the red line represents.
 
-```{r CLT - technology}
+```{r simulation-technology}
 set.seed(1)
 
 kickstart_boot = kickstart_success %>% 
@@ -370,8 +406,8 @@ ggplot(data = boot_samp, aes(x = centered)) +
 
 ```
 
-We have a p-value of 1, which means there is not sufficient evidence to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
+We have a p-value of 1, which means there is not sufficient evidence at the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
 
-### Discussion
+# Discussion
 
 **TODO**: Furthermore, the entire discussion section is missing, as there is no overall summary of what all of the hypothesis tests have shown in the context of the research question, along with the specific p-values that support these conclusions. To make your results and conclusions stronger, you should also critique your own methods and provide suggestions for improving your analysis, as showing possible faults in reliability and validity of your data and the appropriateness of the statistical analyses helps support your positions as researchers and knowledge of the data. To add onto conclusions that you write, you should also discuss what you would do next if you were going to continue work on the project to show where your analyses could have gone farther.
