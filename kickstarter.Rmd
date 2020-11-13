@@ -1,24 +1,20 @@
 ---
-title: "Kickstarter Analysis Proposal"
-subtitle: "10/9/2020"
+title: "Kickstarter Analysis"
+subtitle: "11/20/2020"
 author: "The Laureates: Farzeen Najam, Olivia Olsher, Vincent Liu, Emile Therrien"
 output: pdf_document
 ---
 
 **Notes for our group moving forward: to be included along with rough draft comments**
 
-* Need to change the first data analysis to pledged over real because the "state" variable has too many qualifiers that might neglect certain succesful obs even though they weren't listed as "successful"
-* In Emile and Olivia's part, exclude the live data
-* For Farzeen: need to explain why you chose certain variables and how you then
-incorporated those into your hypo test -why omit tier 7?
-* Emile and olivia: need to see what category is most likely to be funded
-* what should the size of sample for the bootstraps be?
-* use regression to model this? what sort of regression?
+* Unify the standard to define what is successful. "Pledged over real" among all states except those are "live". Explain why not using the "state" variable, because it has too many qualifiers that might neglect certain successful obs even though they weren't listed as "successful".
+* What should the size of sample for the bootstraps be?
+* How to distribute work?
 
 # Introduction
 Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since launching in 2009, 19 million people have pledged to back up projects, and nearly 190,000 projects have been successfully funded.
  
-However, many more projects failed to reach their goals, and our group is interested in analyzing what made projects succeed and fail. The dataset that we use comes from Kaggle, which contains Kickstarter projects up until January 2018.
+However, many more projects failed to reach their goals, and our group is interested in analyzing what made projects succeed and fail. The dataset [Kickstarter Projects](https://www.kaggle.com/kemical/kickstarter-projects) comes from Kaggle, which contains Kickstarter projects up until January 2018.
  
 We will be exploring which variables influence the success of a Kickstarter project by observing which types of projects are more likely to be funded. Our questions include:
 
@@ -30,7 +26,7 @@ Our hypotheses include:
 * The more money the project asks for, the less successful it will be in terms of getting funding.
 * The category “Technology” will be the most likely funded type of projects.
 
-# Data description
+# Data Description
 
 ```{r file-glimpse, eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
@@ -100,9 +96,10 @@ ggplot(data = pledged_goals, aes(x = type, y = mean,
 
 # Methodology
 
-**TODO**: 
-* State how we sample our data
+**TODO**:
+
 * For the methodology section, it is also essential to justify the statistical methods that you will be using in your analyses to answer your research question, so that researchers go into the results section with no doubts about the appropriateness of your choices.
+* State how we sample our data
 
 # Data Analysis
 
@@ -111,7 +108,8 @@ ggplot(data = pledged_goals, aes(x = type, y = mean,
 **TODO**: 
 
 * describe and justify why you ran a chi-squared test and what information this test will provide you in context of supporting your larger question/hypotheses. There could also be greater explanation of the individual steps you took before completing the overall chi-squared test: for instance, you could explain/justify the specific variables you chose to include such as “used_goal_real_tier”--what does this variable mean and how does the classification into tiers with your mutated variable relate to the larger analysis on goal v. success rate? This will make it easier for the reader to follow along and allow you to have methods with enough detail such that they can be reproducible.
-* in the “project goals and success” section, you say that “this means we reject the null hypothesis that success rates for projects with bigger money is equal or higher than projects with lower money.” Saying you have enough evidence to reject the null is good, but it’s also useful to say that you have sufficient evidence to suggest that your alternative hypothesis is true. 
+* in the “project goals and success” section, you say that “this means we reject the null hypothesis that success rates for projects with bigger money is equal or higher than projects with lower money.” Saying you have enough evidence to reject the null is good, but it’s also useful to say that you have sufficient evidence to suggest that your alternative hypothesis is true.
+* explain how tiers were defined. rationale.
 
 *Question*: Is the project goal (amount of money a project asks for) associated with whether it is successful?
 
@@ -185,8 +183,11 @@ $H_1$: $S_{less-money}$ > $S_{more-money}$
 **TODO**:
 
 * “proportion of people who successful with low money goal." was initially difficult to follow/understand exactly what you are trying to test.
-* in the analysis paragraphs following the tests, including the actual p-value found and the alpha level it was tested against is information that is necessary. This was present in some tests, but was missing in the project goal amount and success section. As an example of how this specifically could be improved, in the project goal amount and success section, you may wish to support your claim of “our p-value is less than our alpha value” with the actual p-value you calculate and the alpha value you are testing in. Additionally, when there is sufficient evidence to reject the null hypothesis, make a statement about how this means there is sufficient evidence to claim that the alternative is true. This sentence will help bridge the two conclusions made. In the analysis for the project category and success section, it may be clearer to use a word other than “main category” in the hypothesis test conclusion (i.e. say project of category or something more specific in the context of the research than simply what the variable is named in the dataset). 
+* in the analysis paragraphs following the tests, including the actual p-value found and the alpha level it was tested against is information that is necessary. This was present in some tests, but was missing in the project goal amount and success section. As an example of how this specifically could be improved, in the project goal amount and success section, you may wish to support your claim of “our p-value is less than our alpha value” with the actual p-value you calculate and the alpha value you are testing in. Additionally, when there is sufficient evidence to reject the null hypothesis, make a statement about how this means there is sufficient evidence to claim that the alternative is true. This sentence will help bridge the two conclusions made. In the analysis for the project category and success section, it may be clearer to use a word other than “main category” in the hypothesis test conclusion (i.e. say project of category or something more specific in the context of the research than simply what the variable is named in the dataset).
 * Each bootstrap analysis is only performed with the number of simulations being set to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
+* why is the seed 2?
+* explain why you chose certain variables and how you then incorporated those into your hypo test -why omit tier 7?
+* express the hypotheses in notation and then explain the notation's meaning.
 
 $H_0$:proportion of people who successful with low money goal - proportion of people who successful with high money <= 0
 $H_1$: proportion of people who successful with low money goal - proportion of people who successful with high money > 0 
@@ -260,15 +261,16 @@ Since our p-value is less than our alpha value, we reject our null hypothesis th
 
 *Question*: Does the category of project influence it’s chance of success?
 
-limitations: possible crossover in the main_categories that we cannot screen
-for
-
 **TODO**
 
 * how not to hard code sum in kickstarter_success_ratio pipeline
+* limitations: possible crossover in the main_categories that we cannot screen
+for
 * (from feedback) In the project category and success and goal amount and success categories, this was already mentioned as notes, but there are sum numbers hard coded into the bootstrapping, which make the code not replicable if the sample size were changed, for instance. This should be addressed.
 * how to weight each bar graph the same to show proportionality
 between main categories?
+* exclude the live data (and provide an explanation) when calculating kickstater_success_ratios
+* need to see what category is most likely to be funded (Emile wrote this a week ago... not sure what it means now)
 
 ```{r category-success}
 kickstart_success = kickstarter %>% 
@@ -407,6 +409,12 @@ ggplot(data = boot_samp, aes(x = centered)) +
 ```
 
 We have a p-value of 1, which means there is not sufficient evidence at the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
+
+## Project Goal Amount and Pledge Amount
+
+**TODO**
+
+* use regression model
 
 # Discussion
 
