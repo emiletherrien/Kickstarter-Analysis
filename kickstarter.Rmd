@@ -7,9 +7,19 @@ output: pdf_document
 
 **Notes for our group moving forward: to be included along with rough draft comments**
 
-* Unify the standard to define what is successful. "Pledged over real" among all states except those are "live". Explain why not using the "state" variable, because it has too many qualifiers that might neglect certain successful obs even though they weren't listed as "successful".
-* What should the size of sample for the bootstraps be?
-* How to distribute work?
+Unify the standard to define what is successful. 
+* Drop those columns that are "live"
+* "Pledged over real"
+* "Successful (other anaylyses also use this standard)
+
+How do we sample and what should the size of sample for the bootstraps be?
+
+How to distribute work?
+
+* More work on explorative data analysis
+* Can work on Methodology & Discussion together.
+* Lots of changes needed for each section, but do we need to keep each section? Is every question meaningful? What do we cut so that in this report we can demonstrate nearly all techniques learned from class? 
+* We need to use linear regression for the second to the last section
 
 # Introduction
 Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since launching in 2009, 19 million people have pledged to back up projects, and nearly 190,000 projects have been successfully funded.
@@ -172,6 +182,8 @@ chisq.test(table(kickstarter_not_live$success_state,
 ```
 
 Our test statistic was 19624, which has a chi-square distribution with 6 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's monetary goal and a project's state of success.
+
+**TODO**: add transition sentence to lead to next section
 
 ## Project Goal Amount and Success
 
@@ -405,7 +417,6 @@ ggplot(data = boot_samp, aes(x = centered)) +
   geom_histogram(color = "darkblue", fill = "skyblue") +
   labs(x = "centered means", y = "count") +
   geom_vline(xintercept = diff$prop, color = "red")
-
 ```
 
 We have a p-value of 1, which means there is not sufficient evidence at the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
@@ -414,6 +425,7 @@ We have a p-value of 1, which means there is not sufficient evidence at the $\al
 
 **TODO**
 
+* Come up with a question or claim to study. Doesn't have to be goal amount vs pledge. Can also relate to # backers.
 * use regression model
 
 # Discussion
