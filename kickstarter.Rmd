@@ -371,6 +371,7 @@ for(i in 1:500){
 mean_boot = mean(boot_samp)
 boot_samp = tibble(boot_samp)
 
+
 boot_samp <- boot_samp %>% 
   mutate(centered = boot_samp + abs(mean_boot))
        
