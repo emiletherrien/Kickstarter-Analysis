@@ -62,7 +62,7 @@ The data were collected from Kickstarter Platform likely using web scraping meth
 
 ## Overview of project state:
 
-```{r state-analysis}
+```{r state-analysis,warning=FALSE, message=FALSE, echo=FALSE}
 kickstarter_intro = kickstarter %>%
   group_by(state) %>%
   count()
@@ -77,7 +77,7 @@ kickstarter_intro2
 
 ## Overview of pledged and goal money in USD:
 
-```{r pledged-and-goal-overview, echo=FALSE}
+```{r pledged-and-goal-overview, echo=FALSE,warning=FALSE, message=FALSE, echo=FALSE}
 overview_usd_pledged_real <- kickstarter %>%
   summarize(mean = mean(usd_pledged_real),
             median = median(usd_pledged_real),
@@ -124,7 +124,7 @@ ggplot(data = pledged_goals, aes(x = type, y = mean,
 
 Create a new data frame with projects that are no longer live:
 
-```{r exclude-ongoing-projects}
+```{r exclude-ongoing-projects,warning=FALSE, message=FALSE, echo=FALSE}
 # Exclude ongoing projects
 kickstarter_not_live <- kickstarter %>%
   filter(state != "live")
@@ -132,7 +132,7 @@ kickstarter_not_live <- kickstarter %>%
 
 Create a new variable named usd_goal_real_tier to classify usd_goal_real into tiers:
 
-```{r mutate-goal-tiers, warning=FALSE}
+```{r mutate-goal-tiers,warning=FALSE, message=FALSE, echo=FALSE}
 # perhaps need a better way to categorize values in this column
 kickstarter_not_live <- kickstarter_not_live %>%
   mutate(usd_goal_real_tier = case_when(
@@ -163,7 +163,7 @@ ggplot(data = chart, mapping = aes(x = usd_goal_real_tier, y = numbers,
 
 Create a new variable for success state
 
-```{r mutate-success-state}
+```{r mutate-success-state,warning=FALSE, message=FALSE, echo=FALSE}
 kickstarter_not_live <- kickstarter_not_live %>%
   mutate(success_state = if_else(state == "successful", 1, 0))
 ```
@@ -187,7 +187,7 @@ $H_1$: proportion of people who successful with low money goal - proportion of p
 
 $\alpha$ = 0.05
 
-```{r}
+```{r money-eval,warning=FALSE, message=FALSE, echo=FALSE}
 set.seed(2)
      kick1 <- kickstarter_not_live %>% 
        filter(usd_goal_real_tier == 6 | usd_goal_real_tier == 5 | 
@@ -197,55 +197,55 @@ set.seed(2)
         filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | 
                  usd_goal_real_tier == 3)
        
-n_sims <- 500
-boot_dist <- numeric(n_sims)
-for(i in 1:n_sims){
-  
-  # create indices
-  indices_m <- sample(1:nrow(kick1), replace = T)
-  indices_l <- sample(1:nrow(kick2), replace = T)
-  
-  
-  # bootstrap est. group means
-  temp_m <- kick1 %>% 
-    slice(indices_m) %>% 
-    filter(success_state == 1) %>%
-    summarize(prop_m = n()/ 141243) %>% 
-    select(prop_m) %>% 
-    pull()
-  
-
-  temp_l <-kick2  %>% 
-    slice(indices_l) %>% 
-    filter(success_state == 1) %>%
-    summarize(prop_s= n()/231825) %>% 
-    select(prop_s) %>% 
-    pull()
-
-  boot_dist[i] <-   temp_l - temp_m   #diff btw low goal success high goal success
-}
-boot_diffs <- tibble(diffs = boot_dist)
-
-
-obs_diff <- boot_diffs %>% 
-  summarize(obs_diff = mean(diffs)) %>% 
-  pull()
-
-offset <- boot_diffs %>% 
-  summarize(offset = 0 - mean(diffs)) %>% 
-  pull()
-null_dist <- boot_diffs %>% 
-  mutate(centered_diffs = diffs + offset) %>% 
-  select(centered_diffs)
-
-null_dist %>% 
-  mutate(extreme = ifelse(centered_diffs > abs(obs_diff), 1, 0)) %>% 
-  summarize(p_val = mean(extreme))
-
-
-boot_diffs %>% 
-  summarize(lower = quantile(diffs, 0.025),
-            upper = quantile(diffs, 0.975))
+# n_sims <- 500
+# boot_dist <- numeric(n_sims)
+# for(i in 1:n_sims){
+#   
+#   # create indices
+#   indices_m <- sample(1:nrow(kick1), replace = T)
+#   indices_l <- sample(1:nrow(kick2), replace = T)
+#   
+#   
+#   # bootstrap est. group means
+#   temp_m <- kick1 %>% 
+#     slice(indices_m) %>% 
+#     filter(success_state == 1) %>%
+#     summarize(prop_m = n()/ 141243) %>% 
+#     select(prop_m) %>% 
+#     pull()
+#   
+# 
+#   temp_l <-kick2  %>% 
+#     slice(indices_l) %>% 
+#     filter(success_state == 1) %>%
+#     summarize(prop_s= n()/231825) %>% 
+#     select(prop_s) %>% 
+#     pull()
+# 
+#   boot_dist[i] <-   temp_l - temp_m   #diff btw low goal success high goal success
+# }
+# boot_diffs <- tibble(diffs = boot_dist)
+# 
+# 
+# obs_diff <- boot_diffs %>% 
+#   summarize(obs_diff = mean(diffs)) %>% 
+#   pull()
+# 
+# offset <- boot_diffs %>% 
+#   summarize(offset = 0 - mean(diffs)) %>% 
+#   pull()
+# null_dist <- boot_diffs %>% 
+#   mutate(centered_diffs = diffs + offset) %>% 
+#   select(centered_diffs)
+# 
+# null_dist %>% 
+#   mutate(extreme = ifelse(centered_diffs > abs(obs_diff), 1, 0)) %>% 
+#   summarize(p_val = mean(extreme))
+# 
+# 
+# boot_diffs %>% 
+#   summarize(lower = quantile(diffs, 0.025),
+#             upper = quantile(diffs, 0.975))
 ```
 
 Since our p-value is less than our alpha value, we reject our null hypothesis that the difference in the proportion of projects with less money as goal and proportion of projects with more money as goal is less than or equal to 0.This means we reject the null hypothesis that success rate for projects with bigger money is equal or higher than projects with lower money.
@@ -267,7 +267,7 @@ between main categories?
 * exclude the live data (and provide an explanation) when calculating kickstater_success_ratios
 * need to see what category is most likely to be funded (Emile wrote this a week ago... not sure what it means now)
 
-```{r category-success}
+```{r category-success,warning=FALSE, message=FALSE, echo=FALSE}
 kickstart_success = kickstarter_not_live %>% 
   mutate(
     project_funding_ratio = pledged/goal,
@@ -314,7 +314,7 @@ $H_1$: There is a relationship between main_category and success.
 
 Where the $alpha/$ = 0.05
 
-```{r chi-square-main_category}
+```{r chi-square-main_category,warning=FALSE, message=FALSE, echo=FALSE}
 chisq.test(table(kickstart_success$main_category, kickstart_success$success))
 ```
 
@@ -340,7 +340,7 @@ $H_1$: $p_{s-tech}$ > $p_{s-other}$
 * Each bootstrap analysis is only performed with the number of simulations being set to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
 * For the project category and success section, although the approach and model of analysis are clear, we believe that a p-value of 1 may be unlikely. In your histogram, the observed difference line is so far from the simulated null distribution that observing that proportion under the null distribution seems very unlikely, at least a probability less than 1. Regardless, in order to make the model more clear, that last histogram should be labeled a lot better, with a title about whether this rejects or fails to reject the null, the number of simulations used for bootstrapping, and what the red line represents.
 
-```{r simulation-technology}
+```{r simulation-technology,warning=FALSE, message=FALSE, echo=FALSE}
 set.seed(1)
 
 kickstart_boot = kickstart_success %>% 
@@ -418,7 +418,7 @@ Here we used a linear model to model success. Specifically, we wanted to see how
 
 We used Technology as our reference level to maintain consistency throughout the project.
 
-```{r models}
+```{r models,warning=FALSE, message=FALSE, echo=FALSE}
 #change reference to Tech
 kickstart_success$main_category <- factor(kickstart_success$main_category, 
                                           levels = c("Technology", 
