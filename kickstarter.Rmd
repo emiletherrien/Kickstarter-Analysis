@@ -40,6 +40,7 @@ Our hypotheses include:
 
 ```{r file-glimpse, eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
+library(broom)
 
 kickstarter <- read_csv("data/ks-projects-201801.csv")
 glimpse(kickstarter)
@@ -271,8 +272,8 @@ kickstart_success = kickstarter_not_live %>%
   mutate(
     project_funding_ratio = pledged/goal,
     success = case_when(
-      project_funding_ratio >= 1 ~ "Achieved",
-      project_funding_ratio < 1 ~ "Not achieved"
+      project_funding_ratio >= 1 ~ 1,
+      project_funding_ratio < 1 ~ 0
     )
   )
 
@@ -281,13 +282,17 @@ kickstater_success_ratios = kickstart_success %>%
   count(success) %>% 
   group_by(main_category) %>% 
   mutate(
-    prop = n/sum(n)
+    prop = n/sum(n),
+    plot_success = case_when(
+      success == 1 ~ "Achieved",
+      success == 0 ~ "Not achieved"
+    )
   ) 
 
 kickstater_success_ratios
   
 
-ggplot(data = kickstater_success_ratios, aes(x = success, 
+ggplot(data = kickstater_success_ratios, aes(x = plot_success, 
                                              y = prop,
                                              fill = main_category)) +
   ylim(0, 1) +
@@ -296,8 +301,7 @@ ggplot(data = kickstater_success_ratios, aes(x = success,
   theme(legend.position = "none") +
   labs(x = "Success",
        y = "Proportion of successful projects",
-       title = "All project categories had a greater unsuccessful proportion",
-       subtitle = "Except for Comics, Dance, and Theater")+
+       title = "Comics, Dance, Music, and Theater categories had a success ratio greater than 1")+
   scale_fill_viridis_d()
 
 ```
@@ -410,17 +414,39 @@ We have a p-value of 1, which means there is not sufficient evidence at the $\al
 
 ## Project Goal Amount and Pledge Amount
 
+Here we used a linear model to model success. Specifically, we wanted to see how the project's main category leads to differences in the odds of success. We can't model goal or pledged amounts due to the sheer number of outliers in the dataset. There are some projects asking for a penny in USD and others asking for upwards of $100,000,000.
+
+We used Technology as our reference level to maintain consistency throughout the project.
+
 ```{r models}
-goal_pledge_mod = lm(success ~ goal data = kickstart_success)
+#change reference to Tech
+kickstart_success$main_category <- factor(kickstart_success$main_category, 
+                                          levels = c("Technology", 
+                                                     "Art", 
+                                                     "Comics", 
+                                                     "Crafts",
+                                                     "Dance", 
+                                                     "Design", 
+                                                     "Fashion",
+                                                     "Film & Video",
+                                                     "Food", 
+                                                     "Games", 
+                                                     "Journalism", 
+                                                     "Music",
+                                                     "Photography",
+                                                     "Publishing",
+                                                     "Theater"))
+
+#glm model for success based on main cat
+success_mod = glm(success ~ main_category,
+                  data = kickstart_success, family = "binomial")
+tidy(success_mod)
 ```
 
-
-**TODO**
-
-* goal amount vs pledge
-* categories as interaction effects?
-* use regression model
-* linear model for number of backers and pledged amount
+Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance is 6.374285
+times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success 
+for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient
+evidence based on our model to suggest that Technology is not the most readily successful project type.
 
 # Discussion
 
