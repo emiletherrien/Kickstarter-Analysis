@@ -94,6 +94,7 @@ kickstarter_not_live <- kickstarter %>%
 
 Create a new variable named usd_goal_real_tier to classify usd_goal_real into tiers:
 
+
 ```{r mutate-goal-tiers}
 # perhaps need a better way to categorize values in this column
 kickstarter_not_live <- kickstarter_not_live %>%
