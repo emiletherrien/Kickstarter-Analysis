@@ -173,7 +173,9 @@ ggplot(data = kickstater_success_ratios, aes(x = success,
   geom_col() +
   theme(legend.position = "none") +
   labs(x = "Success",
-       y = "Proportion of successful projects")
+       y = "Proportion of successful projects",
+       title = "Most Categories Were Not Successful on Average",
+       subtitle = "Faceted by Main Category")
 
 ```
 
@@ -259,7 +261,9 @@ boot_samp %>%
 
 ggplot(data = boot_samp, aes(x = centered)) + 
   geom_histogram(color = "darkblue", fill = "skyblue") +
-  labs(x = "centered means", y = "count") +
+  labs(x = "centered means", 
+       y = "count", 
+       title = "Bootstrap Distribution of Proportions of Success") +
   geom_vline(xintercept = diff$prop, color = "red")
 
 ```
