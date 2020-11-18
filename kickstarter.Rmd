@@ -426,7 +426,7 @@ ggplot(data = boot_samp, aes(x = centered)) +
        title = "Bootstrap Distribution of Proportions of Success") +
   geom_vline(xintercept = diff$prop, color = "red")
 
-  filter(TECH == "0")
+  filter(TECH == 0)
 
 t.test(kickstart_boot$TECH, mu = 0, alternative = "less")
 
