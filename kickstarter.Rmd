@@ -283,41 +283,6 @@ $H_1$: $p_{s-tech}$ > $p_{s-other}$
 * Each bootstrap analysis is only performed with the number of simulations being set to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
 * For the project category and success section, although the approach and model of analysis are clear, we believe that a p-value of 1 may be unlikely. In your histogram, the observed difference line is so far from the simulated null distribution that observing that proportion under the null distribution seems very unlikely, at least a probability less than 1. Regardless, in order to make the model more clear, that last histogram should be labeled a lot better, with a title about whether this rejects or fails to reject the null, the number of simulations used for bootstrapping, and what the red line represents.
 
-```{r simulation-technology,warning=FALSE, message=FALSE, echo=FALSE}
-set.seed(1)
-
-kickstart_boot = kickstart_success %>% 
-  mutate(
-    TECH = case_when(
-      main_category == "Technology" ~ "1",
-      main_category != "Technology" ~ "0"
-    )
-  )
-
-kickstart_boot
-         
-obs_diff = kickstart_boot %>% 
-  group_by(TECH) %>% 
-  count(success) %>% 
-  mutate(prop = n/sum(n)) %>% 
-  filter(success == "achieved") %>% 
-  select(TECH, prop)
-obs_diff
-
-diff = obs_diff[2,2] - obs_diff[1,2] #take second row and second column - ...
-
-diff
-
-tech = kickstart_boot %>% 
-  filter(TECH == "1")
-other = kickstart_boot %>% 
-  filter(TECH == "0")
-
-t.test(kickstart_boot$TECH, mu = 0, alternative = "less")
-```
-
-We have a p-value of 1, which means there is not sufficient evidence at the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
-
 ## Project Goal Amount and Pledge Amount
 
 Here we used a linear model to model success. Specifically, we wanted to see how the project's main category leads to differences in the odds of success. We can't model goal or pledged amounts due to the sheer number of outliers in the dataset. There are some projects asking for a penny in USD and others asking for upwards of $100,000,000.
