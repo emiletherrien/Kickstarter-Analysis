@@ -225,7 +225,7 @@ between main categories?
 * need to see what category is most likely to be funded (Emile wrote this a week ago... not sure what it means now)
 
 ```{r category-success,warning=FALSE, message=FALSE, echo=FALSE}
-<<<<<<< HEAD
+
 kickstart_success <- kickstarter_not_live %>% 
   mutate(
     project_funding_ratio = pledged/goal,
@@ -238,11 +238,11 @@ kickstart_success <- kickstarter_not_live %>%
 kickstater_success_ratios = kickstart_success %>% 
   group_by(main_category, success) %>% 
   count(success) %>% 
-=======
+
 kickstater_success_ratios <- kickstarter_not_live %>% 
   group_by(main_category, success_state) %>% 
   count(success_state) %>% 
->>>>>>> d603c513b5d9859340221733b4e1bd8d4d4558c1
+
   group_by(main_category) %>% 
   mutate(
     prop = n/sum(n),
@@ -262,16 +262,16 @@ ggplot(data = kickstater_success_ratios,
   theme(legend.position = "none") +
   labs(x = "Success",
        y = "Proportion of successful projects",
-<<<<<<< HEAD
+
 
        title = "Most Categories Were Not Successful on Average",
        subtitle = "Faceted by Main Category")
 
 #title = "Comics, Dance, Music, and Theater categories had a success ratio greater than 1")+
-=======
+
        title = "Successful vs. Other Projects, grouped by category",
        subtitle = "Success ratio of Comics, Dance, Music, and Theater categories > 1")+
->>>>>>> d603c513b5d9859340221733b4e1bd8d4d4558c1
+
   scale_fill_viridis_d()
 
 
@@ -424,16 +424,16 @@ success_mod = glm(success ~ main_category,
 tidy(success_mod)
 ```
 
-<<<<<<< HEAD
+
 Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance is 6.374285
 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success 
 for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient
 evidence based on our model to suggest that Technology is not the most readily successful project type.
 s
-=======
+
 Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance is 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Technology is not the most readily successful project type.
 
->>>>>>> d603c513b5d9859340221733b4e1bd8d4d4558c1
+
 # Discussion
 
 
