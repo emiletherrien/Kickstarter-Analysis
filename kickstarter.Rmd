@@ -5,15 +5,6 @@ author: "The Laureates: Farzeen Najam, Olivia Olsher, Vincent Liu, Emile Therrie
 output: pdf_document
 ---
 
-**Notes for our group moving forward: to be included along with rough draft comments**
-
-Unify the standard to define what is successful. 
-* Drop those columns that are "live"
-* "Pledged over real"
-* "Successful (other anaylyses also use this standard)
-
-How do we sample and what should the size of sample for the bootstraps be?
-
 # Introduction
 Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since launching in 2009, 19 million people have pledged to back up projects, and nearly 190,000 projects have been successfully funded.
  
@@ -114,7 +105,7 @@ ggplot(data = pledged_goals,
 **TODO**:
 
 * For the methodology section, it is also essential to justify the statistical methods that you will be using in your analyses to answer your research question, so that researchers go into the results section with no doubts about the appropriateness of your choices.
-* State how we sample our data
+* How do we sample and what should the size of sample for the bootstraps be?
 
 # Data Analysis
 
@@ -230,26 +221,17 @@ between main categories?
 * need to see what category is most likely to be funded (Emile wrote this a week ago... not sure what it means now)
 
 ```{r category-success,warning=FALSE, message=FALSE, echo=FALSE}
-kickstart_success = kickstarter_not_live %>% 
-  mutate(
-    project_funding_ratio = pledged/goal,
-    success = case_when(
-      project_funding_ratio >= 1 ~ 1,
-      project_funding_ratio < 1 ~ 0
-    )
-  )
-
-kickstater_success_ratios = kickstart_success %>% 
-  group_by(main_category, success) %>% 
-  count(success) %>% 
+kickstater_success_ratios <- kickstarter_not_live %>% 
+  group_by(main_category, success_state) %>% 
+  count(success_state) %>% 
   group_by(main_category) %>% 
   mutate(
     prop = n/sum(n),
     plot_success = case_when(
-      success == 1 ~ "Achieved",
-      success == 0 ~ "Not achieved"
+      success_state == 1 ~ "Success",
+      success_state == 0 ~ "Others"
     )
-  ) 
+  )
 
 kickstater_success_ratios
 
@@ -261,7 +243,8 @@ ggplot(data = kickstater_success_ratios,
   theme(legend.position = "none") +
   labs(x = "Success",
        y = "Proportion of successful projects",
-       title = "Comics, Dance, Music, and Theater categories had a success ratio greater than 1")+
+       title = "Successful vs. Other Projects, grouped by category",
+       subtitle = "Success ratio of Comics, Dance, Music, and Theater categories > 1")+
   scale_fill_viridis_d()
 
 ```
