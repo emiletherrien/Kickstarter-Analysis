@@ -20,7 +20,7 @@ Our hypotheses include:
 * The more money the project asks for, the less successful it will be in terms of getting funding.
 * The project category is associated with the success rate.
 
-The goal of the project is to give future Kickstarter creators insight into which projects failed and succeeded. This will give them the tools to perform better against their competition, by giving estimates for what has and has not worked based on this historical dataset. Modelling which category will perform best will give creators this insight, assuming that there exists a relationship between project categories and success rates.
+The goal of the project is to give future Kickstarter creators insight into which projects failed and succeeded. This will give them the tools to perform better against their competition, by giving estimates for what has and has not worked based on this historical dataset. Modelling which categories will be most successful best will give creators insight into predicted category success, assuming that there exists a relationship between project categories and success rates.
 
 # Data Description
 
@@ -237,12 +237,13 @@ ggplot(data = kickstater_success_ratios,
   facet_wrap(. ~ main_category) +
   geom_col() +
   theme(legend.position = "none") +
-  labs(x = "Success",
-       y = "Proportion of successful projects",
+  labs(x = "Success state",
+       y = "Proportion",
        title = "Successful vs. Other Projects, grouped by category",
        subtitle = "Success ratio of Comics, Dance, Music, and Theater categories > 1")+
-  scale_fill_viridis_d()
-
+  scale_fill_viridis_d()+
+  theme_minimal() + 
+  theme(legend.position = "none")
 ```
 
 main_category vs. success
@@ -254,7 +255,10 @@ $H_1$: There is a relationship between main_category and success.
 Where the $alpha/$ = 0.05
 
 ```{r chi-square-main_category,warning=FALSE, message=FALSE, echo=FALSE}
-chisq.test(table(kickstart_success$main_category, kickstart_success$success))
+
+
+chisq.test(table(kickstarter_not_live$main_category, 
+                 kickstarter_not_live$success_state))
 ```
 
 **TODO**:
@@ -275,9 +279,8 @@ Here we used a linear model to model success based on main category. Specificall
 We used Technology as our reference level.
 
 ```{r models,warning=FALSE, message=FALSE, echo=FALSE}
-# change reference to Tech
-kickstart_success$main_category <- factor(
-  kickstart_success$main_category, 
+kickstarter_not_live$main_category <- factor(
+  kickstarter_not_live$main_category, 
   levels = c("Technology", 
              "Art", 
              "Comics", 
@@ -296,14 +299,14 @@ kickstart_success$main_category <- factor(
   )
 
 # glm model for success based on main cat
-success_mod = glm(success ~ main_category,
-                  data = kickstart_success, family = "binomial")
+success_mod = glm(success_state ~ main_category,
+                  data = kickstarter_not_live, family = "binomial")
 
 tidy(success_mod) %>% 
   select(term, estimate)
 ```
 
-Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance are 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Dance may be the most readily successful project type and is worth time looking into for creators.
+Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance are 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Dance may be the most readily successful project type and is likely worth spending time looking into this category for project creators.
 
 # Discussion
 
