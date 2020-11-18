@@ -14,13 +14,6 @@ Unify the standard to define what is successful.
 
 How do we sample and what should the size of sample for the bootstraps be?
 
-How to distribute work?
-
-* More work on explorative data analysis
-* Can work on Methodology & Discussion together.
-* Lots of changes needed for each section, but do we need to keep each section? Is every question meaningful? What do we cut so that in this report we can demonstrate nearly all techniques learned from class? 
-* We need to use linear regression for the second to the last section
-
 # Introduction
 Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since launching in 2009, 19 million people have pledged to back up projects, and nearly 190,000 projects have been successfully funded.
  
@@ -200,75 +193,24 @@ $H_1$: proportion of people who successful with low money goal - proportion of p
 $\alpha$ = 0.05
 
 ```{r money-eval,warning=FALSE, message=FALSE, echo=FALSE}
-set.seed(5)
-     kick1 <- kickstarter_not_live %>% 
-       filter(usd_goal_real_tier == 6 | usd_goal_real_tier == 5 | 
-                usd_goal_real_tier == 4 | usd_goal_real_tier == 7)
+set.seed(1)
+kick1 <- kickstarter_not_live %>% 
+  filter(usd_goal_real_tier == 6 | usd_goal_real_tier == 5 | 
+        usd_goal_real_tier == 4 | usd_goal_real_tier == 7)
+
+kick2 <- kickstarter_not_live %>% 
+  filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | 
+        usd_goal_real_tier == 3 | usd_goal_real_tier == 4)
      
-      kick2 <- kickstarter_not_live %>% 
-       filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | 
-                usd_goal_real_tier == 3 | usd_goal_real_tier == 4)
-     
-     
-      t.test(kick1$usd_goal_real_tier, mu = 0, alternative = "greater", conf.level = 0.95)
-      
-     
-       
-# n_sims <- 500
-# boot_dist <- numeric(n_sims)
-# for(i in 1:n_sims){
-#   
-#   # create indices
-#   indices_m <- sample(1:nrow(kick1), replace = T)
-#   indices_l <- sample(1:nrow(kick2), replace = T)
-#   
-#   
-#   # bootstrap est. group means
-#   temp_m <- kick1 %>% 
-#     slice(indices_m) %>% 
-#     filter(success_state == 1) %>%
-#     summarize(prop_m = n()/ 141243) %>% 
-#     select(prop_m) %>% 
-#     pull()
-#   
-# 
-#   temp_l <-kick2  %>% 
-#     slice(indices_l) %>% 
-#     filter(success_state == 1) %>%
-#     summarize(prop_s= n()/231825) %>% 
-#     select(prop_s) %>% 
-#     pull()
-# 
-#   boot_dist[i] <-   temp_l - temp_m   #diff btw low goal success high goal success
-# }
-# boot_diffs <- tibble(diffs = boot_dist)
-# 
-# 
-# obs_diff <- boot_diffs %>% 
-#   summarize(obs_diff = mean(diffs)) %>% 
-#   pull()
-# 
-# offset <- boot_diffs %>% 
-#   summarize(offset = 0 - mean(diffs)) %>% 
-#   pull()
-# null_dist <- boot_diffs %>% 
-#   mutate(centered_diffs = diffs + offset) %>% 
-#   select(centered_diffs)
-# 
-# null_dist %>% 
-#   mutate(extreme = ifelse(centered_diffs > abs(obs_diff), 1, 0)) %>% 
-#   summarize(p_val = mean(extreme))
-# 
-# 
-# boot_diffs %>% 
-#   summarize(lower = quantile(diffs, 0.025),
-#             upper = quantile(diffs, 0.975))
+t.test(kick1$usd_goal_real_tier, mu = 0, alternative = "greater", conf.level = 0.95)
 ```
 
+**TODO**:
 
+* State the p-value and alpha value explicitly here.
+* Currently the statement is repeatitive because you said twice "we reject our null hypothesis that". 
 
-
-Since our p-value is less than our alpha value, we reject our null hypothesis that the difference in the proportion of projects with less money as goal and proportion of projects with more money as goal is less than or equal to 0.This means we reject the null hypothesis that success rate for projects with bigger money is equal or higher than projects with lower money.
+Since our p-value is less than our alpha value, we reject our null hypothesis that the difference in the proportion of projects with less money as goal and proportion of projects with more money as goal is less than or equal to 0. This means we reject the null hypothesis that success rate for projects with bigger money is equal or higher than projects with lower money.
 
 ## Project Category and Success
 
@@ -310,11 +252,9 @@ kickstater_success_ratios = kickstart_success %>%
   ) 
 
 kickstater_success_ratios
-  
 
-ggplot(data = kickstater_success_ratios, aes(x = plot_success, 
-                                             y = prop,
-                                             fill = main_category)) +
+ggplot(data = kickstater_success_ratios,
+       aes(x = plot_success, y = prop, fill = main_category)) +
   ylim(0, 1) +
   facet_wrap(. ~ main_category) +
   geom_col() +
@@ -370,6 +310,7 @@ kickstart_boot = kickstart_success %>%
       main_category != "Technology" ~ "0"
     )
   )
+
 kickstart_boot
          
 obs_diff = kickstart_boot %>% 
@@ -381,6 +322,7 @@ obs_diff = kickstart_boot %>%
 obs_diff
 
 diff = obs_diff[2,2] - obs_diff[1,2] #take second row and second column - ...
+
 diff
 
 tech = kickstart_boot %>% 
@@ -389,45 +331,6 @@ other = kickstart_boot %>%
   filter(TECH == "0")
 
 t.test(kickstart_boot$TECH, mu = 0, alternative = "less")
-
-# boot_samp <- numeric(500)
-# 
-# for(i in 1:500){
-#   boot_tech <- tech %>% 
-#     slice(sample(1:nrow(tech), replace = T)) %>% 
-#     count(success) %>% 
-#     mutate(prop = n/sum(n)) %>% 
-#     select(prop) %>% 
-#     slice(1) %>%
-#     pull()
-#   boot_other<- other %>% 
-#     slice(sample(1:nrow(other), replace = T)) %>% 
-#     count(success) %>% 
-#     mutate(prop = n/sum(n)) %>% 
-#     select(prop) %>% 
-#     slice(1) %>%
-#     pull()
-#   
-#   boot_samp[i] <- boot_tech - boot_other
-# }
-# 
-# #mean of bootstrap samples:
-# mean_boot = mean(boot_samp)
-# boot_samp = tibble(boot_samp)
-# 
-# 
-# boot_samp <- boot_samp %>% 
-#   mutate(centered = boot_samp + abs(mean_boot))
-#        
-# boot_samp %>% 
-#   mutate(extreme = if_else(centered > abs(diff), 0, 1)
-#   ) %>% 
-#   summarize(p_val = mean(extreme))
-
-# ggplot(data = boot_samp, aes(x = centered)) + 
-#   geom_histogram(color = "darkblue", fill = "skyblue") +
-#   labs(x = "centered means", y = "count") +
-#   geom_vline(xintercept = diff$prop, color = "red")
 ```
 
 We have a p-value of 1, which means there is not sufficient evidence at the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
@@ -439,34 +342,34 @@ Here we used a linear model to model success. Specifically, we wanted to see how
 We used Technology as our reference level to maintain consistency throughout the project.
 
 ```{r models,warning=FALSE, message=FALSE, echo=FALSE}
-#change reference to Tech
-kickstart_success$main_category <- factor(kickstart_success$main_category, 
-                                          levels = c("Technology", 
-                                                     "Art", 
-                                                     "Comics", 
-                                                     "Crafts",
-                                                     "Dance", 
-                                                     "Design", 
-                                                     "Fashion",
-                                                     "Film & Video",
-                                                     "Food", 
-                                                     "Games", 
-                                                     "Journalism", 
-                                                     "Music",
-                                                     "Photography",
-                                                     "Publishing",
-                                                     "Theater"))
+# change reference to Tech
+kickstart_success$main_category <- factor(
+  kickstart_success$main_category, 
+  levels = c("Technology", 
+             "Art", 
+             "Comics", 
+             "Crafts",
+             "Dance", 
+             "Design", 
+             "Fashion",
+             "Film & Video",
+             "Food", 
+             "Games", 
+             "Journalism", 
+             "Music",
+             "Photography",
+             "Publishing",
+             "Theater")
+  )
 
-#glm model for success based on main cat
+# glm model for success based on main cat
 success_mod = glm(success ~ main_category,
                   data = kickstart_success, family = "binomial")
+
 tidy(success_mod)
 ```
 
-Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance is 6.374285
-times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success 
-for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient
-evidence based on our model to suggest that Technology is not the most readily successful project type.
+Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance is 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Technology is not the most readily successful project type.
 
 # Discussion
 
