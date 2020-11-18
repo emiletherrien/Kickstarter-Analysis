@@ -85,7 +85,7 @@ kickstarter_state_count
 kickstarter_success_rate
 ```
 
-## Overview of pledged and goal money in USD:
+## Overview of pledged and goal amount in USD:
 
 ```{r pledged-and-goal-overview, echo=FALSE,warning=FALSE, message=FALSE, echo=FALSE}
 overview_usd_pledged_real <- kickstarter %>%
@@ -98,20 +98,22 @@ overview_usd_goal_real <- kickstarter %>%
   summarize(
     mean = mean(usd_goal_real),
     median = median(usd_goal_real),
-    sd = sd(usd_goal_real)
-    )%>% 
+    sd = sd(usd_goal_real))%>% 
   mutate(type = "goal")
 
 overview_usd_pledged_real
 overview_usd_goal_real
 
-pledged_goals = full_join(overview_usd_pledged_real, overview_usd_goal_real,
+pledged_goals <- full_join(overview_usd_pledged_real, overview_usd_goal_real,
                           by = NULL)
 
-ggplot(data = pledged_goals, aes(x = type, y = mean,
-                                 fill = type)) +
-  scale_fill_viridis_d()+
-  geom_col()
+ggplot(data = pledged_goals,
+       aes(x = type, y = mean, fill = type)) +
+  scale_fill_viridis_d() +
+  geom_col() +
+  labs(title = "Mean Amount of Goal vs. Pledged Amount",
+       subtitle = "Pledged amount is usually much less than the goal amount") +
+  theme_bw()
 ```
 
 # Methodology
