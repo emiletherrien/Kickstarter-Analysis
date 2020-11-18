@@ -62,17 +62,27 @@ The data were collected from Kickstarter Platform likely using web scraping meth
 
 ## Overview of project state:
 
-```{r state-analysis,warning=FALSE, message=FALSE, echo=FALSE}
-kickstarter_intro = kickstarter %>%
+```{r state-analysis, warning=FALSE, message=FALSE, echo=FALSE}
+kickstarter_state_count <- kickstarter %>%
   group_by(state) %>%
-  count()
+  count() %>%
+  arrange(desc(n))
 
-kickstarter_intro2 = kickstarter %>%
+ggplot(data = kickstarter_state_count,
+       aes(x=state, y=n)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Project State",
+       y = "Count",
+       title = "Distribution of project states",
+       subtitle = "More projects fail than those that succeed") +
+  theme_bw()
+
+kickstarter_success_rate = kickstarter %>%
   filter(state == "successful") %>%
   summarize("project success rate" = n()/nrow(kickstarter))
 
-kickstarter_intro
-kickstarter_intro2
+kickstarter_state_count
+kickstarter_success_rate
 ```
 
 ## Overview of pledged and goal money in USD:
