@@ -237,7 +237,7 @@ kickstart_success <- kickstarter_not_live %>%
 
 kickstater_success_ratios = kickstart_success %>% 
   group_by(main_category, success) %>% 
-  count(success) %>% 
+  count(success) 
 
 kickstater_success_ratios <- kickstarter_not_live %>% 
   group_by(main_category, success_state) %>% 
@@ -270,7 +270,7 @@ ggplot(data = kickstater_success_ratios,
 #title = "Comics, Dance, Music, and Theater categories had a success ratio greater than 1")+
 
        title = "Successful vs. Other Projects, grouped by category",
-       subtitle = "Success ratio of Comics, Dance, Music, and Theater categories > 1")+
+       subtitle = "Success ratio of Comics, Dance, Music, and Theater categories > 1") +
 
   scale_fill_viridis_d()
 
@@ -290,6 +290,8 @@ chisq.test(table(kickstart_success$main_category, kickstart_success$success))
 ```
 
 **TODO**:
+
+- Olivia: discussion on this chi-squared piece 
 
 * state the p-value here
 * describe and justify why you ran a chi-squared test and what information this test will provide you in context of supporting your larger question/hypotheses. There could also be greater explanation of the individual steps you took before completing the overall chi-squared test
