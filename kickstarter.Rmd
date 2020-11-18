@@ -511,4 +511,5 @@ evidence based on our model to suggest that Technology is not the most readily s
 s
 # Discussion
 
+
 **TODO**: Furthermore, the entire discussion section is missing, as there is no overall summary of what all of the hypothesis tests have shown in the context of the research question, along with the specific p-values that support these conclusions. To make your results and conclusions stronger, you should also critique your own methods and provide suggestions for improving your analysis, as showing possible faults in reliability and validity of your data and the appropriateness of the statistical analyses helps support your positions as researchers and knowledge of the data. To add onto conclusions that you write, you should also discuss what you would do next if you were going to continue work on the project to show where your analyses could have gone farther.
