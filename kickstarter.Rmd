@@ -69,8 +69,7 @@ kickstarter_success_rate = kickstarter %>%
 
 kickstarter_state_count
 kickstarter_success_rate
-```]
-\[]
+```
 More projects failed than those that succeeded, with an average success rate of 35.4%.
 
 ## Overview of pledged and goal amount in USD:
@@ -221,6 +220,7 @@ money is equal or higher than projects with lower money.
 ### Logistic Model for Success based on Project Tiers
 
 
+
 Here we used a logistic regression model to predict category success based on the project tier.
 
 Here we used a logistic regression model to predict project success based on the project's tier.
@@ -231,7 +231,7 @@ We used Tier 1 as our reference level.
 ```{r tier-model,warning=FALSE, message=FALSE, echo=FALSE}
 kickstarter$usd_goal_real_tier <- factor(
   kickstarter$usd_goal_real_tier, 
-  levels = c(1, 
+  levels = c( 1, 
              2, 
              3, 
              4,
@@ -241,9 +241,13 @@ kickstarter$usd_goal_real_tier <- factor(
   )
 
 tier_mod = glm(success_state ~ usd_goal_real_tier, data = kickstarter)
-tidy(tier_mod)
+tidy(tier_mod) %>%
+select(term, estimate)
 ```
 
+Relative to tier 1, the most likely funded project category tier is tier 2. The odds of success for tier 2, holding everything constant is, $e^{-0.067468}$ = 0.9347 times the odds of success for the Tier 1 projects.
+
+Furthermore, all else being equal, the estimated probability of success for the tier 2 category is 0.62, whereas for tier 1 the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Tier 2 funding may be the most readily successful project type.
 
 ## Project Category and Success
 
@@ -509,6 +513,7 @@ tidy(success_mod) %>%
 
 
 
+
 Relative to Technology, the most likely funded project category is Dance. 
 The odds of success for Dance is 6.374285 times the odds of success for 
 Technology. Furthermore, all else being equal, the estimated probability of 
@@ -520,6 +525,9 @@ Relative to Technology, the most likely funded project category is Dance. The od
 
 
 Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance are 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Dance may be the most readily successful project type and is likely worth spending time looking into this category for project creators.
+
+Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance are $e^{-1.38714883}$ = 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Dance may be the most readily successful project type and is likely worth spending time looking into this category for project creators.
+
 
 # Discussion
 
