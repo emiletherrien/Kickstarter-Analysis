@@ -183,9 +183,9 @@ Now we test our first claim using a CLT-based approach:
 
 At the $\alpha$ = 0.05 level:
 
-$H_0$: $project_{tiers}$ are independent of $project_{success}$
+* $H_0$: $project_{tiers}$ are independent of $project_{success}$
 
-$H_1$: $project_{tiers}$ are not independent of $project_{success}$, where $project_{tiers}$ is the variable "usd_goal_real_tiers" and $project_{success}$ the variable "success_state".
+* $H_1$: $project_{tiers}$ are not independent of $project_{success}$, where $project_{tiers}$ is the variable "usd_goal_real_tiers" and $project_{success}$ the variable "success_state".
 
 Our following CLT approach is testing whether or not there is a relationship between how much money a project attempts to raise and its success.
 
