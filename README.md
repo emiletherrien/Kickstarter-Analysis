@@ -1,5 +1,7 @@
 # Kickstarter-Analysis
+
 This project is an exploration into which variables influence the success of a Kickstarter project by observing which types of projects are more likely to be funded.
+---
 
 Codebook (variable_name | Label | Valid range):    
   
