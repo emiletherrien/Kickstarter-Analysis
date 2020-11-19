@@ -60,7 +60,8 @@ ggplot(data = kickstarter_state_count,
        title = "Distribution of project states",
        subtitle = "More projects failed than those that succeeded") +
   scale_fill_viridis_d() +
-  theme_bw()
+  theme_bw() +
+  theme(legend.position = "none")
 
 kickstarter_success_rate = kickstarter %>%
   filter(state == "successful") %>%
@@ -94,11 +95,12 @@ pledged_goals <- full_join(overview_usd_pledged_real, overview_usd_goal_real,
 
 ggplot(data = pledged_goals,
        aes(x = type, y = mean, fill = type)) +
-  scale_fill_viridis_d() +
   geom_col() +
   labs(title = "Mean Amount of Goal vs. Pledged Amount",
        subtitle = "Pledged amount is usually much less than the goal amount") +
-  theme_bw()
+  theme_bw() + 
+  theme(legend.position = "none") +
+  scale_fill_viridis_d()
 ```
 
 # Methodology
@@ -151,8 +153,10 @@ chart<- kickstarter_not_live %>%
 
 chart
 
-ggplot(data = chart, mapping = aes(x = usd_goal_real_tier, y = numbers, 
-                                  fill = as.factor(usd_goal_real_tier))) +
+ggplot(data = chart,
+       mapping = aes(x = factor(usd_goal_real_tier),
+                     y = numbers,
+                     fill = as.factor(usd_goal_real_tier))) +
   geom_col() +
   scale_fill_viridis_d()+
   labs(title = "Tier 2 has the most amount of projects",
@@ -255,8 +259,6 @@ $H_1$: There is a relationship between main_category and success.
 Where the $alpha/$ = 0.05
 
 ```{r chi-square-main_category,warning=FALSE, message=FALSE, echo=FALSE}
-
-
 chisq.test(table(kickstarter_not_live$main_category, 
                  kickstarter_not_live$success_state))
 ```
