@@ -180,28 +180,13 @@ Now we test our first claim using a CLT-based approach:
 
 *Hypotheses*:
 
+At the $\alpha$ = 0.05 level:
+
 $H_0$: $p_{less-money}$ $\le$ $p_{more-money}$
-$H_1$: $p_{less-money}$ > $p_{more-money}$
 
+$H_1$: $p_{less-money}$ > $p_{more-money}$, where $p_{less-money}$ is the proportion of projects that had a lower funding goal and $p_{more-money}$ the proportion of those with a higher goal; $p_{less-money}$ contained Tiers 1-4 and $p_{more-money}$ contained Tiers 5-7
 
-$H_0$:proportion of people who were  with low money goal - proportion of people 
-who successful with high money <= 0
-$H_1$: proportion of people who successful with low money goal - proportion of 
-people who successful with high money > 0.
-
-In simple words, our null hypothesis mean that there are more or equal proportion
-of people who were successful with getting the funding for their projects if the goal
-of their projects was high when compared with people who were successful in getting
-the funding for their projects if the goal was low.
-
-The alternative hypothesis say that there are more or proportion
-of people who were successful with getting the funding for their projects if the goal
-of their projects was low when compared with people who were successful in getting
-the funding for their projects if the goal was high.
-
-$\alpha$ = 0.05
-
-Our alpha value is 0.05.
+Our alternative hypothesis states that those projects with a lower funding goal will be 
 
 We have divided our project into two databases.Kick1 stands for the database that
 has projects with funding goal as 5,6,7 tiers which are basically categorical
@@ -214,8 +199,6 @@ We do a t-test on kick1, with alternative hypothesis set as greater, confidence
 level as 0.95 because our alpha is 0.05. We do this test on our categorical
 variable.
 
-
-
 ```{r money-eval,warning=FALSE, message=FALSE, echo=FALSE}
 set.seed(1)
 kick1 <- kickstarter %>% 
@@ -225,22 +208,16 @@ kick1 <- kickstarter %>%
 kick2 <- kickstarter %>% 
   filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | 
         usd_goal_real_tier == 3 | usd_goal_real_tier == 4)
-     
-t.test(kick1$usd_goal_real_tier, mu = 0, alternative = "greater", conf.level = 0.95)
+
+chisq.test(table(kickstater_not_live$usd_goal_real_tier, 
+                 kickstater_not_live$success_state))
 ```
 
+At the previously stated $\alpha$ level of 0.05, our p-value is less than 2.2e-16 and thus significant.
 
-* State the p-value and alpha value explicitly here.
-The p value we have got from conducting the t test is < 2.2e-16- a very small number.
-Our alpha value is 0.05
+Since our p-value is less than our alpha value, we have enough evidence to reject our null hypothesis that the proportion of successful projects in Tiers 1-4 was less than or equal to those in Tiers 5-7.
 
-Since our p-value is less than our alpha value, we reject our null hypothesis that
-the difference in the proportion of projects with less money as goal but successful
-and proportion of projects with more money as goal  and successful less than or 
-equal to 0.
-
-This means that we have enough evidence to claim that the alternative hypothesis
-is true.
+There is enough evidence to suggest that projects in Tiers 1-4 are more successful in getting funding than those in Tiers 5-7.
 
 ## Project Category and Success
 
