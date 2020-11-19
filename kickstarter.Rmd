@@ -200,6 +200,10 @@ At the previously stated $\alpha$ level of 0.05, our $\chi^2$ value is 19624 wit
 
 ### Logistic Model for Each Project Tier
 
+Here we used a logistic regression model to predict category success based on the project tier.
+
+We used Tier 1 as our reference level.
+
 ```{r tier-model}
 kickstarter$usd_goal_real_tier <- factor(
   kickstarter$usd_goal_real_tier, 
