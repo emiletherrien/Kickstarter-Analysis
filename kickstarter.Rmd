@@ -190,8 +190,8 @@ Our following CLT approach is testing whether or not there is a relationship bet
 
 ```{r money-eval,warning=FALSE, message=FALSE, echo=FALSE}
 set.seed(1)
-chisq.test(table(kickstater_not_live$usd_goal_real_tier, 
-                 kickstater_not_live$success_state))
+chisq.test(table(kickstarter$usd_goal_real_tier, 
+                 kickstarter$success_state))
 ```
 
 At the previously stated $\alpha$ level of 0.05, our $\chi^2$ value is 19624 with 6 degrees of freedom and a p-value of less than 2.2e-16. Since our p-value is less than our alpha value, we have enough evidence to reject our null hypothesis that the Tier a project is independent of its success. There is enough evidence to suggest that a project's Tier is related to its success rate.
