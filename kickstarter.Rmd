@@ -63,7 +63,7 @@ ggplot(data = kickstarter_state_count,
   theme_minimal() +
   theme(legend.position = "none")
 
-Mkickstarter_success_rate = kickstarter %>%
+kickstarter_success_rate = kickstarter %>%
   filter(state == "successful") %>%
   summarize("project success rate" = n()/nrow(kickstarter))
 
@@ -99,7 +99,9 @@ ggplot(data = pledged_goals,
        aes(x = type, y = mean, fill = type)) +
   geom_col() +
   labs(title = "Mean Amount of Goal vs. Pledged Amount",
-       subtitle = "Pledged amount is usually much less than the goal amount") +
+       subtitle = "Pledged amount is usually much less than the goal amount",
+       x = "Funding type",
+       y = "Mean") +
   theme_minimal() + 
   theme(legend.position = "none") +
   scale_fill_viridis_d()
@@ -221,8 +223,6 @@ Since our p-value is less than our alpha value, we reject our null hypothesis th
 
 *Question*: Does the category of project influence it’s chance of success?
 
-### Part 1: Visualizing the relative success of each category
-
 * limitations: possible crossover in the main_categories that we cannot screen
 for
 
@@ -263,8 +263,6 @@ We plotted histograms to show the ratio of successes to failures ("other") of th
 Interestingly, the visualization shows that most categories had more failures than successes in raising enough money to meet their goals. 
 
 Only the categories of Comics, Dance, and Theatre had more successess than failures according to our visualizations. 
-
-### Part 2: Assessing the relationship between main_category and success
 
 *Hypotheses*:
 
