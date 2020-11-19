@@ -234,6 +234,7 @@ Relative to tier 1, the most likely funded project category tier is Tier 1. The 
 
 Furthermore, all else being equal, the estimated probability of success for the Tier 1 projects are 0.62, whereas for Tier 2 the probability of success is 0.61. There is sufficient evidence based on our model to suggest that Tier 1 funding may be the most readily successful project Tier, and that the probability of success is over 0.50 for Tiers 1, 2, 3 (p = 0.59), 4 (p = 0.58), 5 (p = 0.55), 6 (p = 0.52), and 7 (p = 0.51).
 
+
 ## Project Category and Success
 
 We are studying the question of whether the main category of a project 
