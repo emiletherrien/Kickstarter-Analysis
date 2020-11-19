@@ -321,8 +321,6 @@ We will perform a CLT simulation at the $\alpha$ = 0.05.
 
 ```{r chi-square-main_category,warning=FALSE, message=FALSE, echo=FALSE}
 
-
-
 chisq.test(table(kickstarter_not_live$main_category, 
                  kickstarter_not_live$success_state))
 
