@@ -53,14 +53,15 @@ kickstarter_state_count <- kickstarter %>%
   arrange(desc(n))
 
 ggplot(data = kickstarter_state_count,
-       aes(x=state, y=n)) +
+       aes(x=reorder(state, -n), y=n, fill=state)) +
   geom_bar(stat = "identity") +
   labs(x = "Project State",
        y = "Count",
        title = "Distribution of project states",
-       subtitle = "More projects fail than those that succeed") +
-  ###scale_fill_viridis_d() +
-  theme_bw()
+       subtitle = "More projects failed than those that succeeded") +
+  scale_fill_viridis_d() +
+  theme_bw() +
+  theme(legend.position = "none")
 
 kickstarter_success_rate = kickstarter %>%
   filter(state == "successful") %>%
@@ -94,19 +95,24 @@ pledged_goals <- full_join(overview_usd_pledged_real, overview_usd_goal_real,
 
 ggplot(data = pledged_goals,
        aes(x = type, y = mean, fill = type)) +
-  scale_fill_viridis_d() +
   geom_col() +
   labs(title = "Mean Amount of Goal vs. Pledged Amount",
        subtitle = "Pledged amount is usually much less than the goal amount") +
-  theme_bw()
+  theme_bw() + 
+  theme(legend.position = "none") +
+  scale_fill_viridis_d()
 ```
 
 # Methodology
 
 
+
 In this analysis, we conducted two central limit thereom (CLT)-based tests. Due to the sheer size of this data set, using a simulation-based method for analysis is not appropriate. We removed all projects that were "live" and currently asking for funding, so that any discrepencies seen would be negated. If we had included "Live" projects, each project category may not have been representative of the population and project goal amounts may be skewed. 
 
 In this analysis, we conducted two central limit thereom (CLT)-based tests. Due to the sheer size of this dataset, using a simulation based method for analysis is not appropriate. We removed all projects that were "live" and currently asking for funding, so that any discrepencies seen would be negated. If we had included "Live" projects, each project category may not have been representative of the population and project goal amounts may be skewed. To analyze success, rather than using the given variable "success", we created our own. The original variable "success" contained cancelled, suspended, and undefined states along with successful and failed states. We had no indication if those projects that were cancelled, suspended, or undefined met their goals and cancelled prematurely or if they cancelled due to no funding at all. To get around this, we created a variable for success that was a ratio of the project's funding raised over their original funding goal. If the funding raised was greater than the funding asked for, the project was successful; if the project goal was greater than the raised funds, the Kickstarter funding was unsuccessful.
+
+In this analysis, we conducted two central limit thereom (CLT)-based tests. Due to the sheer size of this dataset, using a simulation based method for analysis is not appropriate. We removed all projects that were "live" and currently asking for funding, so that any discrepencies seen would be negated. If we had included "Live" projects, each project category may not have been representative of the population and project goal amounts may be skewed. Thereforein the first section of the analysis, we overwrote the Kickstarter dataframe with observations that are not "Live". To analyze success, rather than using the given variable "success", we created our own. The original variable "success" contained cancelled, suspended, and undefined states along with successful and failed states. We had no indication if those projects that were cancelled, suspended, or undefined met their goals and cancelled prematurely or if they cancelled due to no funding at all. To get around this, we created a variable for success that was a ratio of the project's funding raised over their original funding goal. If the funding raised was greater than the funding asked for, the project was successful; if the project goal was greater than the raised funds, the Kickstarter funding was unsuccessful.
+
 
 
 To begin our analysis after removing "Live" projects, we assessed whether there is a relationship between the amount of money a creator asks for and its success. We categorized projects by tiers, on a scale of 1-7, with Tier 1 asking for the least amount of funding and Tier 7 the most. We grouped Tiers 1-4 and 5-7 together when we ran our CLT-based test, placing the lower and higher groups in the same category when running a t-test. It would make intuitive sense if the projects that require less funding they will be more successful. These projects that ask for less funding should require a lower volume of money funded and meet their goal and on average meet more of their goals before project funding deadlines. Furthermore, we believed that these projects would require less backers donating money, assuming each backer donates an equal amount, and thus be dependent on a lower amount of people for funding.
@@ -133,7 +139,7 @@ Create a new data frame with projects that are no longer live:
 
 ```{r exclude-ongoing-projects,warning=FALSE, message=FALSE, echo=FALSE}
 # Exclude ongoing projects
-kickstarter_not_live <- kickstarter %>%
+kickstarter <- kickstarter %>%
   filter(state != "live")
 ```
 
@@ -145,7 +151,7 @@ Create a new variable named usd_goal_real_tier to classify usd_goal_real into ti
 ```{r mutate-goal-tiers,warning=FALSE, message=FALSE, echo=FALSE}
 
 # perhaps need a better way to categorize values in this column
-kickstarter_not_live <- kickstarter_not_live %>%
+kickstarter <- kickstarter %>%
   mutate(usd_goal_real_tier = case_when(
     usd_goal_real < 1000 ~ 1,
     usd_goal_real >= 1000 & usd_goal_real < 5000 ~ 2,
@@ -156,14 +162,16 @@ kickstarter_not_live <- kickstarter_not_live %>%
     usd_goal_real >= 500000 ~ 7,
   ))
 
-chart<- kickstarter_not_live %>%
+chart<- kickstarter %>%
   group_by(usd_goal_real_tier) %>%
   summarize(numbers = n())
 
 chart
 
-ggplot(data = chart, mapping = aes(x = usd_goal_real_tier, y = numbers, 
-                                  fill = as.factor(usd_goal_real_tier))) +
+ggplot(data = chart,
+       mapping = aes(x = factor(usd_goal_real_tier),
+                     y = numbers,
+                     fill = as.factor(usd_goal_real_tier))) +
   geom_col() +
   scale_fill_viridis_d()+
   labs(title = "Tier 2 has the most amount of projects",
@@ -175,7 +183,7 @@ ggplot(data = chart, mapping = aes(x = usd_goal_real_tier, y = numbers,
 Create a new variable for success state
 
 ```{r mutate-success-state,warning=FALSE, message=FALSE, echo=FALSE}
-kickstarter_not_live <- kickstarter_not_live %>%
+kickstarter <- kickstarter %>%
   mutate(success_state = if_else(state == "successful", 1, 0))
 ```
 
@@ -200,11 +208,11 @@ $\alpha$ = 0.05
 
 ```{r money-eval,warning=FALSE, message=FALSE, echo=FALSE}
 set.seed(1)
-kick1 <- kickstarter_not_live %>% 
+kick1 <- kickstarter %>% 
   filter(usd_goal_real_tier == 6 | usd_goal_real_tier == 5 | 
            usd_goal_real_tier == 7)
 
-kick2 <- kickstarter_not_live %>% 
+kick2 <- kickstarter %>% 
   filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | 
         usd_goal_real_tier == 3 | usd_goal_real_tier == 4)
      
@@ -229,6 +237,7 @@ for
 
 ```{r category-success,warning=FALSE, message=FALSE, echo=FALSE}
 
+
 kickstart_success <- kickstarter_not_live %>% 
   mutate(
     project_funding_ratio = pledged/goal,
@@ -243,6 +252,9 @@ kickstater_success_ratios = kickstart_success %>%
   count(success) 
 
 kickstater_success_ratios <- kickstarter_not_live %>% 
+
+kickstater_success_ratios <- kickstarter %>% 
+
   group_by(main_category, success_state) %>% 
   count(success_state) %>% 
 
@@ -320,8 +332,13 @@ We will perform a CLT simulation at the $alpha/$ = 0.05.
 
 ```{r chi-square-main_category,warning=FALSE, message=FALSE, echo=FALSE}
 
+
 chisq.test(table(kickstarter_not_live$main_category, 
                  kickstarter_not_live$success_state))
+
+chisq.test(table(kickstarter$main_category, 
+                 kickstarter$success_state))
+
 ```
 
 Analysis of Results:
@@ -453,8 +470,8 @@ We used Technology as our reference level.
 
 
 ```{r models,warning=FALSE, message=FALSE, echo=FALSE}
-kickstarter_not_live$main_category <- factor(
-  kickstarter_not_live$main_category, 
+kickstarter$main_category <- factor(
+  kickstarter$main_category, 
   levels = c("Technology", 
              "Art", 
              "Comics", 
@@ -474,7 +491,7 @@ kickstarter_not_live$main_category <- factor(
 
 # glm model for success based on main cat
 success_mod = glm(success_state ~ main_category,
-                  data = kickstarter_not_live, family = "binomial")
+                  data = kickstarter, family = "binomial")
 
 tidy(success_mod) %>% 
   select(term, estimate)
