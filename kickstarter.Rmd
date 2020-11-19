@@ -186,7 +186,7 @@ $H_0$: $project_{tiers}$ are independent of $project_{success}$
 
 $H_1$: $project_{tiers}$ are not independent of $project_{success}$, where $project_{tiers}$ is the variable "usd_goal_real_tiers" and $project_{success}$ the variable "success_state".
 
-In simple words, our following CLT approach is testing whether or not there is a relationship between how much money a project attempts to raise and its success.
+Our following CLT approach is testing whether or not there is a relationship between how much money a project attempts to raise and its success.
 
 ```{r money-eval,warning=FALSE, message=FALSE, echo=FALSE}
 set.seed(1)
@@ -195,6 +195,25 @@ chisq.test(table(kickstater_not_live$usd_goal_real_tier,
 ```
 
 At the previously stated $\alpha$ level of 0.05, our $\chi^2$ value is 19624 with 6 degrees of freedom and a p-value of less than 2.2e-16. Since our p-value is less than our alpha value, we have enough evidence to reject our null hypothesis that the Tier a project is independent of its success. There is enough evidence to suggest that a project's Tier is related to its success rate.
+
+### Logistic Model for Each Project Tier
+
+```{r tier-model}
+kickstarter$main_category <- factor(
+  kickstarter$usd_goal_real_tier, 
+  levels = c("1", 
+             "2", 
+             "3", 
+             "4",
+             "5", 
+             "6", 
+             "7")
+  )
+
+tier_mod = lm(success_state ~ usd_goal_real_tier, data = kickstarter)
+tidy(tier_mod)
+```
+
 
 ## Project Category and Success
 
@@ -263,8 +282,7 @@ The Chi-squared test compares observed vs. the expected counts that we would exp
 
 We used a Chi-squared test because we want to see if the variables main_category and success_rate are independent of one another in this data set. In other words, running a Chi-squared test helps us evaluate our hypothesis; that there is an association between project category and project success rate.
 
-From our Chi-squared test, we calculate the p-value to be < 2.2e-16. Our test statistic was 16137, which has a Chi-square distribution with 14 degrees of freedom under the null hypothesis.This corresponds to a p-value less than 2.2e-16. Thus, our decision is to reject the null hypothesis. Moreover, 
-there is sufficient evidence to claim that the alternative hypothesis, that there is an an association between main category and success, is true.
+From our Chi-squared test, we calculate the p-value to be < 2.2e-16. Our test statistic was 16137, which has a Chi-square distribution with 14 degrees of freedom under the null hypothesis. This corresponds to a p-value less than 2.2e-16. Thus, our decision is to reject the null hypothesis. Moreover, there is sufficient evidence to claim that the alternative hypothesis, that there is an an association between main category and success, is true.
 
 ## Logistic Regression Model to Predict Category Success
 
