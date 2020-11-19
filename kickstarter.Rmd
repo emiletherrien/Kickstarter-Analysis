@@ -60,10 +60,10 @@ ggplot(data = kickstarter_state_count,
        title = "Distribution of project states",
        subtitle = "More projects failed than those that succeeded") +
   scale_fill_viridis_d() +
-  theme_bw() +
+  theme_minimal() +
   theme(legend.position = "none")
 
-kickstarter_success_rate = kickstarter %>%
+Mkickstarter_success_rate = kickstarter %>%
   filter(state == "successful") %>%
   summarize("project success rate" = n()/nrow(kickstarter))
 
@@ -100,7 +100,7 @@ ggplot(data = pledged_goals,
   geom_col() +
   labs(title = "Mean Amount of Goal vs. Pledged Amount",
        subtitle = "Pledged amount is usually much less than the goal amount") +
-  theme_bw() + 
+  theme_minimal() + 
   theme(legend.position = "none") +
   scale_fill_viridis_d()
 ```
@@ -117,7 +117,7 @@ After establishing a relationship between project success and the intial funding
 
 Following these analyses, we modelled each project's log-odds of success based on "main_category". Success here was a boolean value, with 1 representing successful funding and 0 representing unsuccessful funding. This model enables future creators to think about their project in the larger scheme of a category and base their opinions off these values. Technology was used as the reference level for our model, so each value is based off success relative to the technology category. We used a proportionality level of 0.50 to determine if a project category was worth pursuing. A level greater than 0.50 meant that the category was predicted to have more successful projects than unsuccessful ones.
 
-# Data Analysis
+# Results
 
 As explained in the Methodology section, we first overwrited the initial kickstarter dataframe with projects that are not "Live".
 
@@ -264,7 +264,7 @@ Interestingly, the visualization shows that most categories had more failures th
 
 Only the categories of Comics, Dance, and Theatre had more successess than failures according to our visualizations. 
 
-### Part 2: assessing the relationship between main_category and success
+### Part 2: Assessing the relationship between main_category and success
 
 *Hypotheses*:
 
@@ -286,9 +286,9 @@ We used a Chi-squared test because we want to see if the variables main_category
 From our Chi-squared test, we calculate the p-value to be < 2.2e-16. Our test statistic was 16137, which has a Chi-square distribution with 14 degrees of freedom under the null hypothesis.This corresponds to a p-value less than 2.2e-16. Thus, our decision is to reject the null hypothesis. Moreover, 
 there is sufficient evidence to claim that the alternative hypothesis, that there is an an association between main category and success, is true.
 
-## Project Category and Success
+## Logistic Regression Model to Predict Category Success
 
-Here we used a linear model to model success. Specifically, we wanted to see how the project's main category leads to differences in the odds of success.
+Here we used a logistic regression model to predict category success. Specifically, we wanted to see how the project's main category leads to differences in the odds of success.
 
 We used Technology as our reference level.
 
