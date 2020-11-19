@@ -111,9 +111,7 @@ In this analysis, we conducted two central limit thereom (CLT)-based tests. Due 
 
 In this analysis, we conducted two central limit thereom (CLT)-based tests. Due to the sheer size of this dataset, using a simulation based method for analysis is not appropriate. We removed all projects that were "live" and currently asking for funding, so that any discrepencies seen would be negated. If we had included "Live" projects, each project category may not have been representative of the population and project goal amounts may be skewed. To analyze success, rather than using the given variable "success", we created our own. The original variable "success" contained cancelled, suspended, and undefined states along with successful and failed states. We had no indication if those projects that were cancelled, suspended, or undefined met their goals and cancelled prematurely or if they cancelled due to no funding at all. To get around this, we created a variable for success that was a ratio of the project's funding raised over their original funding goal. If the funding raised was greater than the funding asked for, the project was successful; if the project goal was greater than the raised funds, the Kickstarter funding was unsuccessful.
 
-In this analysis, we conducted two central limit thereom (CLT)-based tests. Due to the sheer size of this dataset, using a simulation based method for analysis is not appropriate. We removed all projects that were "live" and currently asking for funding, so that any discrepencies seen would be negated. If we had included "Live" projects, each project category may not have been representative of the population and project goal amounts may be skewed. Thereforein the first section of the analysis, we overwrote the Kickstarter dataframe with observations that are not "Live". To analyze success, rather than using the given variable "success", we created our own. The original variable "success" contained cancelled, suspended, and undefined states along with successful and failed states. We had no indication if those projects that were cancelled, suspended, or undefined met their goals and cancelled prematurely or if they cancelled due to no funding at all. To get around this, we created a variable for success that was a ratio of the project's funding raised over their original funding goal. If the funding raised was greater than the funding asked for, the project was successful; if the project goal was greater than the raised funds, the Kickstarter funding was unsuccessful.
-
-
+In this analysis, we conducted two central limit thereom (CLT)-based tests. Due to the sheer size of this dataset, using a simulation based method for analysis is not appropriate. We removed all projects that were "live" and currently asking for funding, so that any discrepencies seen would be negated. If we had included "Live" projects, each project category may not have been representative of the population and project goal amounts may be skewed. Therefore in the first section of the analysis, we overwrote the Kickstarter dataframe with observations that are not "Live". To analyze success, rather than using the given variable "success", we created our own. The original variable "success" contained cancelled, suspended, and undefined states along with successful and failed states. We had no indication if those projects that were cancelled, suspended, or undefined met their goals and cancelled prematurely or if they cancelled due to no funding at all. To get around this, we created a variable for success that was a ratio of the project's funding raised over their original funding goal. If the funding raised was greater than the funding asked for, the project was successful; if the project goal was greater than the raised funds, the Kickstarter funding was unsuccessful.
 
 To begin our analysis after removing "Live" projects, we assessed whether there is a relationship between the amount of money a creator asks for and its success. We categorized projects by tiers, on a scale of 1-7, with Tier 1 asking for the least amount of funding and Tier 7 the most. We grouped Tiers 1-4 and 5-7 together when we ran our CLT-based test, placing the lower and higher groups in the same category when running a t-test. It would make intuitive sense if the projects that require less funding they will be more successful. These projects that ask for less funding should require a lower volume of money funded and meet their goal and on average meet more of their goals before project funding deadlines. Furthermore, we believed that these projects would require less backers donating money, assuming each backer donates an equal amount, and thus be dependent on a lower amount of people for funding.
 
@@ -224,7 +222,11 @@ t.test(kick1$usd_goal_real_tier, mu = 0, alternative = "greater", conf.level = 0
 * State the p-value and alpha value explicitly here.
 * Currently the statement is repeatitive because you said twice "we reject our null hypothesis that". 
 
-Since our p-value is less than our alpha value, we reject our null hypothesis that the difference in the proportion of projects with less money as goal and proportion of projects with more money as goal is less than or equal to 0. This means we reject the null hypothesis that success rate for projects with bigger money is equal or higher than projects with lower money.
+Since our p-value is less than our alpha value, we reject our null hypothesis 
+that the difference in the proportion of projects with less money as goal and 
+proportion of projects with more money as goal is less than or equal to 0. This 
+means we reject the null hypothesis that success rate for projects with bigger 
+money is equal or higher than projects with lower money.
 
 ## Project Category and Success
 
@@ -360,15 +362,11 @@ there is sufficient evidence to claim that the alternative hypothesis, that
 there is an an association between main category and success, is true. 
  
 
-
-
-
-
-
 ## Project Goal Amount and Pledge Amount
 
-Here we used a linear model to model success based on main category. Specifically, we wanted to see how the project's main category leads to differences in the odds of success.
-
+Here we used a linear model to model success based on main category. 
+Specifically, we wanted to see how the project's main category leads to 
+differences in the odds of success.
 
 
 **TODO**:
@@ -499,11 +497,13 @@ tidy(success_mod) %>%
 
 
 
-Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance is 6.374285
-times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success 
-for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient
-evidence based on our model to suggest that Technology is not the most readily successful project type.
-s
+Relative to Technology, the most likely funded project category is Dance. 
+The odds of success for Dance is 6.374285 times the odds of success for 
+Technology. Furthermore, all else being equal, the estimated probability of 
+success for the Dance category is 0.62, whereas for Technology the probability 
+of success is 0.21. There is sufficient evidence based on our model to suggest 
+that Technology is not the most readily successful project type.
+
 
 Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance is 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Technology is not the most readily successful project type.
 
