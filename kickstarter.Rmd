@@ -293,9 +293,6 @@ We will perform a CLT simulation at the $\alpha$ = 0.05.
 
 ```{r chi-square-main_category,warning=FALSE, message=FALSE, echo=FALSE}
 
-chisq.test(table(kickstarter_not_live$main_category, 
-                 kickstarter_not_live$success_state))
-
 chisq.test(table(kickstarter$main_category, 
                  kickstarter$success_state))
 
@@ -359,4 +356,8 @@ Relative to Technology, the most likely funded project category is Dance. The od
 
 # Discussion
 
+Farzeen: This will require a summary of what you have learned about your research question along with statistical arguments supporting your conclusions. 
 
+Olivia: Also, critique your own methods and provide suggestions for improving your analysis. Issues pertaining to the reliability and validity of your data and appropriateness of the statistical analysis should also be discussed here. 
+
+Emile: A paragraph on what you would do differently if you were able to start over with the project or what you would do next if you were going to continue work on the project should also be included.
