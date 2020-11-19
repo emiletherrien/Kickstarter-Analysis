@@ -267,7 +267,7 @@ results while excluding the 1's and 0's.
 
 We plotted histograms to show the ratio of successes to failures ("other") of 
 the projects, faceted by category. By using a ratio of successes to failures, we 
-were able to visualize the relative success of each category
+were able to visualize the relative success of each category.
 
 
 
