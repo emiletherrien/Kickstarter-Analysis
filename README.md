@@ -2,8 +2,9 @@
 This project is an exploration into which variables influence the success of a Kickstarter project by observing which types of projects are more likely to be funded.
 
 Codebook:
-  Variables:    
-  state 
+  Variable | Label | Valid range:    
+  
+  state | Project success category | Successful, Failed, Cancelled, Undefined, Live, Suspended
   main_category 
   usd_goal_real 
   usd_pledged_real
@@ -11,7 +12,7 @@ Codebook:
   usd_real_goal_tier 
   success_state                   Label:                                    Valid Range:
   
-                            Project success category                  Successful, Failed, Cancelled, Undefined, Live, Suspended
+                            
                     Broad project category                    Art, Comics, Crafts, Dance, Design, Fashion, Film & Video, Food, Games, Journalism,
                                                                             Music, Photography, Publishing, Technology, Theater
                     Funding goal amount in USD                0.01 - 166,361,391
