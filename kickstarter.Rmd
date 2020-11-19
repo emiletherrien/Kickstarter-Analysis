@@ -131,9 +131,9 @@ kickstarter <- kickstarter %>%
 
 In the Explorative Data Analysis section, the first visualization gave an overview of project states, and the second revealed the large difference between the amount of money asked for and raised. However, from those two plots, we could neither see the goal and pledge amount of each successful and failed projects, nor could we know if whether or not there is a relationship between the goal and pledge amount. In lieu of this, we decided to examine the association between projects' success and their goal amount. To do so, we first came up with a claim that states our assumed association.
 
-*Claim*: The more money the project asks for (project goal), the less successful it will be in terms of getting funding.
+*Claim*: The amount of money a project asks for is related to its success in getting enough funding.
 
-In order to perform a hypothesis testing on this claim, we need to quantify the goal amount into only a few levels rather than using the original discrete data (amount in USD). Otherwise, sample tests wouldn't work well because of too many data points. We first tried using quantile functions in R, which resulted even numbers of projects in each tier. However, that should not be the intended result, because if the goal amount roughly follows a normal distribution, then a few tiers in the middle would have similar goal amount, which would make the result with sample test less effective. Therefore, we decided to categorize the goal amount using the following metric and to create new variable named usd_goal_real_tier to classify usd_goal_real into tiers.
+In order to perform a hypothesis testing on this claim, we need to quantify the goal amount into only a few levels rather than using the original discrete data (amount in USD). Otherwise, sample tests wouldn't work well because of too many data points. We decided that using a tiering system would better suit our purposes of determining a relationship between success and how much money a project asks for. Furthermore, visualizing the project tier can give insight to how many projects fall in each range. Therefore, we decided to categorize the goal amount using the following metric and to create new variable named "usd_goal_real_tier" to classify "usd_goal_real" into tiers.
 
 The tiers are as follows: Tier 1 < 1,000 in goal USD, Tier 2 $\ge$ 1,000 and < 5,000, Tier 3 $\ge$ 5,000 and < 10,000, Tier 4 $\ge$ 10,000 and < 20,000, Tier 5 $\ge$ 20,000 and < 100,000, Tier 6 $\ge$ 100,000 and < 500,000, and Tier 7 $\ge$ 500,000.
 
@@ -182,42 +182,19 @@ Now we test our first claim using a CLT-based approach:
 
 At the $\alpha$ = 0.05 level:
 
-$H_0$: $p_{less-money}$ $\le$ $p_{more-money}$
+$H_0$: $project_{tiers}$ are independent of $project_{success}$
 
-$H_1$: $p_{less-money}$ > $p_{more-money}$, where $p_{less-money}$ is the proportion of projects that had a lower funding goal and $p_{more-money}$ the proportion of those with a higher goal; $p_{less-money}$ contained Tiers 1-4 and $p_{more-money}$ contained Tiers 5-7
+$H_1$: $project_{tiers}$ are not independent of $project_{success}$, where $project_{tiers}$ is the variable "usd_goal_real_tiers" and $project_{success}$ the variable "success_state".
 
-Our alternative hypothesis states that those projects with a lower funding goal will be 
-
-We have divided our project into two databases.Kick1 stands for the database that
-has projects with funding goal as 5,6,7 tiers which are basically categorical
-variables for high money goals described above.
-Our database kick2 is just for the visual purposes- a database with lower tiers
-of goal funding asked.
-
-We conduct the CLT test on kick1 database.
-We do a t-test on kick1, with alternative hypothesis set as greater, confidence
-level as 0.95 because our alpha is 0.05. We do this test on our categorical
-variable.
+In simple words, our following CLT approach is testing whether or not there is a relationship between how much money a project attempts to raise and its success.
 
 ```{r money-eval,warning=FALSE, message=FALSE, echo=FALSE}
 set.seed(1)
-kick1 <- kickstarter %>% 
-  filter(usd_goal_real_tier == 6 | usd_goal_real_tier == 5 | 
-           usd_goal_real_tier == 7)
-
-kick2 <- kickstarter %>% 
-  filter(usd_goal_real_tier == 1 | usd_goal_real_tier == 2 | 
-        usd_goal_real_tier == 3 | usd_goal_real_tier == 4)
-
 chisq.test(table(kickstater_not_live$usd_goal_real_tier, 
                  kickstater_not_live$success_state))
 ```
 
-At the previously stated $\alpha$ level of 0.05, our p-value is less than 2.2e-16 and thus significant.
-
-Since our p-value is less than our alpha value, we have enough evidence to reject our null hypothesis that the proportion of successful projects in Tiers 1-4 was less than or equal to those in Tiers 5-7.
-
-There is enough evidence to suggest that projects in Tiers 1-4 are more successful in getting funding than those in Tiers 5-7.
+At the previously stated $\alpha$ level of 0.05, our $\chi^2$ value is 19624 with 6 degrees of freedom and a p-value of less than 2.2e-16. Since our p-value is less than our alpha value, we have enough evidence to reject our null hypothesis that the Tier a project is independent of its success. There is enough evidence to suggest that a project's Tier is related to its success rate.
 
 ## Project Category and Success
 
