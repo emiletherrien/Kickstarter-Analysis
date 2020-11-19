@@ -312,9 +312,16 @@ than successes in raising enough money to meet their goals.
 Only the categories of Comics, Dance, and Theatre had more successess than 
 failures according to our visualizations. 
 
-We created another variable called "plot_success" which enabled us to plot the results while excluding the 1's and 0's. We plotted bar charts to show the proportion of successful to unsuccessful ("other") projects, faceted by category. By using a ratio of successes to others, we were able to visualize the relative success of each category.
+We created another variable called "plot_success" which enabled us to plot the 
+results while excluding the 1's and 0's. We plotted bar charts to show the 
+proportion of successful to unsuccessful ("other") projects, faceted by category. 
+By using a ratio of successes to others, we were able to visualize the relative 
+success of each category.
 
-Interestingly, the visualization shows that more categories failed in raising enough money to meet their goals than those that achieved their monetary goal. Only the categories of Comics, Dance, and Theatre had more successess than failures according to our visualizations.
+Interestingly, the visualization shows that more categories failed in raising 
+enough money to meet their goals than those that achieved their monetary goal. 
+Only the categories of Comics, Dance, and Theatre had more successess than 
+failures according to our visualizations.
 
 *Hypotheses*:
 
@@ -359,17 +366,12 @@ Specifically, we wanted to see how the project's main category leads to
 differences in the odds of success.
 
 
-**TODO**:
-
-
-
 $H_0$: There is no relationship between main_category and odds of success.
 
 $H_1$: There is a relationship between main_category and odds of success. 
 
 We will perform a simulation at the $alpha/$ = 0.05.
 
-* Each bootstrap analysis is only performed with the number of simulations being set to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
 * For the project category and success section, although the approach and model of analysis are clear, we believe that a p-value of 1 may be unlikely. In your histogram, the observed difference line is so far from the simulated null distribution that observing that proportion under the null distribution seems very unlikely, at least a probability less than 1. Regardless, in order to make the model more clear, that last histogram should be labeled a lot better, with a title about whether this rejects or fails to reject the null, the number of simulations used for bootstrapping, and what the red line represents.
 
 ```{r simulation-technology,warning=FALSE, message=FALSE, echo=FALSE}
