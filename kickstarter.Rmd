@@ -69,8 +69,8 @@ kickstarter_success_rate = kickstarter %>%
 
 kickstarter_state_count
 kickstarter_success_rate
-```
-
+```]
+\[]
 More projects failed than those that succeeded, with an average success rate of 35.4%.
 
 ## Overview of pledged and goal amount in USD:
@@ -183,9 +183,9 @@ Now we test our first claim using a CLT-based approach:
 
 At the $\alpha$ = 0.05 level:
 
-* $H_0$: $project_{tiers}$ are independent of $project_{success}$
+* $H_0$: $project_{tiers}$ and $project_{success}$ have no relationship
 
-* $H_1$: $project_{tiers}$ are not independent of $project_{success}$, where $project_{tiers}$ is the variable "usd_goal_real_tiers" and $project_{success}$ the variable "success_state".
+* $H_1$: There is a relationship between $project_{tiers}$ and $project_{success}$, where $project_{tiers}$ is the variable "usd_goal_real_tiers" and $project_{success}$ the variable "success_state".
 
 Our following CLT approach is testing whether or not there is a relationship between how much money a project attempts to raise and its success.
 
@@ -201,7 +201,7 @@ At the previously stated $\alpha$ level of 0.05, our $\chi^2$ value is 19624 wit
 
 ### Logistic Model for Success based on Project Tiers
 
-Here we used a logistic regression model to predict category success based on the project tier.
+Here we used a logistic regression model to predict project success based on the project's tier.
 
 We used Tier 1 as our reference level.
 
@@ -264,13 +264,9 @@ ggplot(data = kickstater_success_ratios,
   theme(legend.position = "none")
 ```
 
-We created another variable called "plot_success" which enabled us to plot the results while excluding the 1's and 0's.
+We created another variable called "plot_success" which enabled us to plot the results while excluding the 1's and 0's. We plotted bar charts to show the proportion of successful to unsuccessful ("other") projects, faceted by category. By using a ratio of successes to others, we were able to visualize the relative success of each category.
 
-We plotted histograms to show the ratio of successes to failures ("other") of the projects, faceted by category. By using a ratio of successes to failures, we were able to visualize the relative success of each category.
-
-Interestingly, the visualization shows that most categories had more failures than successes in raising enough money to meet their goals. 
-
-Only the categories of Comics, Dance, and Theatre had more successess than failures according to our visualizations. 
+Interestingly, the visualization shows that more categories failed in raising enough money to meet their goals than those that achieved their monetary goal. Only the categories of Comics, Dance, and Theatre had more successess than failures according to our visualizations.
 
 *Hypotheses*:
 
