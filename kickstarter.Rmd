@@ -53,13 +53,13 @@ kickstarter_state_count <- kickstarter %>%
   arrange(desc(n))
 
 ggplot(data = kickstarter_state_count,
-       aes(x=state, y=n)) +
+       aes(x=reorder(state, -n), y=n, fill=state)) +
   geom_bar(stat = "identity") +
   labs(x = "Project State",
        y = "Count",
        title = "Distribution of project states",
-       subtitle = "More projects fail than those that succeed") +
-  ###scale_fill_viridis_d() +
+       subtitle = "More projects failed than those that succeeded") +
+  scale_fill_viridis_d() +
   theme_bw()
 
 kickstarter_success_rate = kickstarter %>%
