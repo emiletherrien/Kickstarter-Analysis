@@ -123,7 +123,7 @@ In this analysis, we conducted two central limit thereom (CLT)-based tests. Due 
 
 To begin our analysis after removing "Live" projects, we assessed whether there is a relationship between the amount of money a creator asks for and its success. We categorized projects by tiers, on a scale of 1-7, with Tier 1 asking for the least amount of funding and Tier 7 the most. We grouped Tiers 1-4 and 5-7 together when we ran our CLT-based test, placing the lower and higher groups in the same category when running this test. We had to first determine a relationship between tiers and success, so we used a $\chi^2$ test. After determining this relationship, we used a linear model to show the differences in success between Tiers. It would make intuitive sense if the projects that require less funding then they will be more successful. These projects that ask for less funding should require a lower volume of money funded and meet their goal and on average meet more of their goals before project funding deadlines. Furthermore, we believed that these projects would require less backers donating money, assuming each backer donates an equal amount, and thus be dependent on a lower amount of people for funding.
 
-After establishing a relationship between project success and the intial funding goal and modelling the predicted success based on each Tier, we used a CLT-based test to determine if there was a relationship between project categories and their success. We used the variable "main_category" instead of "category" because the latter was far too specific for our purposes. "Main_category" was composed of 15 distinct categories, each for a unique industry. We felt that 15 categories allowed our analyss to be broader and therefore each could encompass many more projects as not to pigeon hole a creator when using our analysis for their purposes. There may be possible crossover between main categories that we were unable to screen for, however, but we assumed this to be a neglible amount of projects, if it existed at all, and thus continued with "main_category" over "category" for analysis.
+After establishing a relationship between project success and the intial funding goal and modelling the predicted success based on each Tier, we used a CLT-based test to determine if there was a relationship between project categories and their success. We used the variable "main_category" instead of "category" because the latter was far too specific for our purposes. "Main_category" was composed of 15 distinct categories, each for a unique industry. We felt that 15 categories allowed our analysis to be broader and therefore each could encompass many more projects as not to pigeon hole a creator when using our analysis for their purposes. There may be possible crossover between main categories that we were unable to screen for, however, but we assumed this to be a neglible amount of projects, if it existed at all, and thus continued with "main_category" over "category" for analysis.
 
 Following these analyses, we modelled each project's log-odds of success based on "main_category". Success here was a boolean value, with 1 representing successful funding and 0 representing unsuccessful funding. This model enables future creators to think about their project in the larger scheme of a category and base their opinions off these values. Technology was used as the reference level for our model, so each value is based off success relative to the technology category. We used a proportionality level of 0.50 to determine if a project category was worth pursuing. A level greater than 0.50 meant that the category was predicted to have more successful projects than unsuccessful ones.
 
@@ -240,19 +240,29 @@ tidy(tier_mod)
 
 ## Project Category and Success
 
-**Olivia TODO**:
 
-* We probably need to explain why we're studying this question just to provide some context for readers. And for each step, we will need some explanations about why we do what we do. (similar to section 1 of Data Analysis)
-* Clean up and explain the bullet point below that says "limitations: ..."
+We are studying the question of whether the main category of a project 
+influences its rate of success. We decided to use main category rather than 
+category, because the latter was too broad for our project.
+"Main_category" is composed of 15 distinct categories, each for a unique 
+industry.
+
+The accuracy of or analysis for this question is limited by the fact there could  
+be possible crossovers in the main_categories that we cannot screen for. We 
+assumed this to be a negligible amount of projects, if it existed at all, and 
+thus continued with "main_category" over "category" for analysis.
 
 
-kickstater_success_ratios = kickstarter_not_live %>% 
+*Question*: Does the main category of project influence it’s chance of success?
 
-*Question*: Does the category of project influence it’s chance of success?
+We created another variable called "plot_success" which enabled us to plot the 
+results while excluding the 1's and 0's.
+
+We plotted histograms to show the ratio of successes to failures ("other") of 
+the projects, faceted by category. By using a ratio of successes to failures, we 
+were able to visualize the relative success of each category
 
 
-* limitations: possible crossover in the main_categories that we cannot screen
-for
 
 ```{r category-success,warning=FALSE, message=FALSE, echo=FALSE}
 kickstater_success_ratios <- kickstarter %>% 
@@ -284,13 +294,12 @@ ggplot(data = kickstater_success_ratios,
   theme(legend.position = "none")
 ```
 
-We created another variable called "plot_success" which enabled us to plot the results while excluding the 1's and 0's.
 
-We plotted histograms to show the ratio of successes to failures ("other") of the projects, faceted by category. By using a ratio of successes to failures, we were able to visualize the relative success of each category.
+Interestingly, the visualization shows that most categories had more failures 
+than successes in raising enough money to meet their goals. 
 
-Interestingly, the visualization shows that most categories had more failures than successes in raising enough money to meet their goals. 
-
-Only the categories of Comics, Dance, and Theatre had more successess than failures according to our visualizations. 
+Only the categories of Comics, Dance, and Theatre had more successess than 
+failures according to our visualizations. 
 
 *Hypotheses*:
 
@@ -431,7 +440,7 @@ chisq.test(table(kickstarter$main_category, kickstarter$success_state))
 
 **Analysis of Results:**
 
-<<<<<<< HEAD
+
 We have a p-value of 1, which means there is not sufficient evidence at 
 the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of 
 success for main categories other than Technology is the same or greater than 
@@ -497,3 +506,4 @@ Relative to Technology, the most likely funded project category is Dance. The od
 # Discussion
 
 **TODO**: Furthermore, the entire discussion section is missing, as there is no overall summary of what all of the hypothesis tests have shown in the context of the research question, along with the specific p-values that support these conclusions. To make your results and conclusions stronger, you should also critique your own methods and provide suggestions for improving your analysis, as showing possible faults in reliability and validity of your data and the appropriateness of the statistical analyses helps support your positions as researchers and knowledge of the data. To add onto conclusions that you write, you should also discuss what you would do next if you were going to continue work on the project to show where your analyses could have gone farther.
+
