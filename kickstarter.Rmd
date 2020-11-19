@@ -111,9 +111,33 @@ ggplot(data = pledged_goals,
 
 ## Project Goal Amount and Success
 
-*Claim*: The more money the project asks for (project goal), the less successful it will be in terms of getting funding.
+*Claim*: The more money the project asks for (project goal), the less successful
+it will be in terms of getting funding.
 
 **TODO**: 
+
+We will examine the relationship between the amount of money asked and the success
+rate of the project in terms of acquiring the funding.
+
+First, we exclude the ongoing projects because we want to test our hypothesis on
+the projects that have been completed to be able to get the accurate success rate.
+
+We decided to choose the variable "used_goal_real_tier" because we noticed that
+the amount of money in the usd varied a lot in different projects.A better approach
+could be to convert this variable in our data to a categorical variable so that
+it is easier for reader to understand what category the goal money falls in when
+compared with other projects.
+
+The tiers were rationalized by working with the range of goal-money we saw in the data.
+The minimum amount of money asked by the projects was claimed as anything less than
+a 1000 dollars, this was our tier 1. We distributed the tier evenly till we reached 
+the maximum money ever asked which is 500,000 dollars. This number could be very
+large as we aim to cover most of the goals. 
+
+For an easy manipulation of data, we made a new binary variable called "success_state".
+
+
+
 
 * add some context here why we examine this relationship
 * you could explain/justify the specific variables you chose to include such as “used_goal_real_tier”--what does this variable mean and how does the classification into tiers with your mutated variable relate to the larger analysis on goal v. success rate? This will make it easier for the reader to follow along and allow you to have methods with enough detail such that they can be reproducible. Explain how tiers were defined. rationale.
@@ -169,17 +193,27 @@ kickstarter_not_live <- kickstarter_not_live %>%
 $H_0$: $S_{less-money}$ $\le$ $S_{more-money}$
 $H_1$: $S_{less-money}$ > $S_{more-money}$
 
+
+$H_0$:proportion of people who were  with low money goal - proportion of people who successful with high money <= 0
+$H_1$: proportion of people who successful with low money goal - proportion of people who successful with high money > 0.
+
+In simple words, our null hypothesis mean that there are more or equal proportion
+of people who were successful with getting the funding for their projects if the goal
+of their projects was high when compared with people who were successful in getting
+the funding for their projects if the goal was low.
+
+The alternative hypothesis say that there are more or equal proportion
+of people who were successful with getting the funding for their projects if the goal
+of their projects was low when compared with people who were successful in getting
+the funding for their projects if the goal was high.
+
 **TODO**:
 
 * “proportion of people who successful with low money goal." was initially difficult to follow/understand exactly what you are trying to test.
 * in the analysis paragraphs following the tests, including the actual p-value found and the alpha level it was tested against is information that is necessary. This was present in some tests, but was missing in the project goal amount and success section. As an example of how this specifically could be improved, in the project goal amount and success section, you may wish to support your claim of “our p-value is less than our alpha value” with the actual p-value you calculate and the alpha value you are testing in. Additionally, when there is sufficient evidence to reject the null hypothesis, make a statement about how this means there is sufficient evidence to claim that the alternative is true. This sentence will help bridge the two conclusions made. In the analysis for the project category and success section, it may be clearer to use a word other than “main category” in the hypothesis test conclusion (i.e. say project of category or something more specific in the context of the research than simply what the variable is named in the dataset).
-* Each bootstrap analysis is only performed with the number of simulations being set to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
 
-* explain why you chose certain variables and how you then incorporated those into your hypo test
-* express the hypotheses in notation and then explain the notation's meaning.
 
-$H_0$:proportion of people who successful with low money goal - proportion of people who successful with high money <= 0
-$H_1$: proportion of people who successful with low money goal - proportion of people who successful with high money > 0 
+
 
 $\alpha$ = 0.05
 
