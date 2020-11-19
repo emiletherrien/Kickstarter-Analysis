@@ -508,7 +508,6 @@ success for the Dance category is 0.62, whereas for Technology the probability
 of success is 0.21. There is sufficient evidence based on our model to suggest 
 that Technology is not the most readily successful project type.
 
-
 Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance is 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Technology is not the most readily successful project type.
 
 
