@@ -457,16 +457,26 @@ the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of
 success for main categories other than Technology is the same or greater than 
 the proportion of succxsess for Technology. 
 
-The Chi-squared test compares observed vs. the expected counts that we would expect if the null hypothesis were true.
+The Chi-squared test compares observed vs. the expected counts that we would 
+expect if the null hypothesis were true.
 
+We used a Chi-squared test because we want to see if the variables main_category
+and success_rate are independent of one another in this data set. In other words, 
+running a Chi-squared test helps us evaluate our hypothesis; that there is an 
+association between project category and project success rate.
 
-We used a Chi-squared test because we want to see if the variables main_category and success_rate are independent of one another in this data set. In other words, running a Chi-squared test helps us evaluate our hypothesis; that there is an association between project category and project success rate.
-
-From our Chi-squared test, we calculate the p-value to be < 2.2e-16. Our test statistic was 16137, which has a Chi-square distribution with 14 degrees of freedom under the null hypothesis. This corresponds to a p-value less than 2.2e-16. Thus, our decision is to reject the null hypothesis. Moreover, there is sufficient evidence to claim that the alternative hypothesis, that there is an an association between main category and success, is true.
+From our Chi-squared test, we calculate the p-value to be < 2.2e-16. Our test 
+statistic was 16137, which has a Chi-square distribution with 14 degrees of 
+freedom under the null hypothesis. This corresponds to a p-value less than 
+2.2e-16. Thus, our decision is to reject the null hypothesis. Moreover, there is
+sufficient evidence to claim that the alternative hypothesis, that there is an 
+an association between main category and success, is true.
 
 ## Logistic Regression Model to Predict Category Success
 
-Here we used a logistic regression model to predict category success. Specifically, we wanted to see how the project's main category leads to differences in the odds of success.
+Here we used a logistic regression model to predict category success. 
+Specifically, we wanted to see how the project's main category leads to 
+differences in the odds of success.
 
 We used Technology as our reference level.
 
