@@ -457,7 +457,7 @@ chisq.test(table(kickstarter$main_category, kickstarter$success_state))
 We have a p-value of 1, which means there is not sufficient evidence at 
 the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of 
 success for main categories other than Technology is the same or greater than 
-the proportion of succxsess for Technology. 
+the proportion of succsess for Technology. 
 
 The Chi-squared test compares observed vs. the expected counts that we would 
 expect if the null hypothesis were true.
