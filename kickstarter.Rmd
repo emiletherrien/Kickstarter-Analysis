@@ -119,7 +119,7 @@ Following these analyses, we modelled each project's log-odds of success based o
 
 # Data Analysis
 
-As explained in the Methodology section, we first need to overwrite the initial kickstarter dataframe with projects that are not "Live":
+As explained in the Methodology section, we first overwrited the initial kickstarter dataframe with projects that are not "Live".
 
 ```{r exclude-ongoing-projects,warning=FALSE, message=FALSE, echo=FALSE}
 kickstarter <- kickstarter %>%
