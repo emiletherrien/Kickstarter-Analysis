@@ -71,6 +71,8 @@ kickstarter_state_count
 kickstarter_success_rate
 ```
 
+More projects failed than those that succeeded, with an average success rate of 35.4%.
+
 ## Overview of pledged and goal amount in USD:
 
 ```{r pledged-and-goal-overview, echo=FALSE,warning=FALSE, message=FALSE, echo=FALSE}
@@ -103,11 +105,13 @@ ggplot(data = pledged_goals,
   scale_fill_viridis_d()
 ```
 
+The average funding pledged was 9058.92, with a standard deviation of 90,973.34. In comparison, the average funding goal was 45,454 with a standard deviation of 1,152,950. The observed differences between both groups is tremendous.
+
 # Methodology
 
-In this analysis, we conducted two central limit thereom (CLT)-based tests. Due to the sheer size of this dataset, using a simulation based method for analysis is not appropriate. We removed all projects that were "live" and currently asking for funding, so that any discrepencies seen would be negated. If we had included "Live" projects, each project category may not have been representative of the population and project goal amounts may be skewed. Thereforein the first section of the analysis, we overwrote the Kickstarter dataframe with observations that are not "Live". To analyze success, rather than using the given variable "success", we created our own. The original variable "success" contained cancelled, suspended, and undefined states along with successful and failed states. We had no indication if those projects that were cancelled, suspended, or undefined met their goals and cancelled prematurely or if they cancelled due to no funding at all. To get around this, we created a variable for success that was a ratio of the project's funding raised over their original funding goal. If the funding raised was greater than the funding asked for, the project was successful; if the project goal was greater than the raised funds, the Kickstarter funding was unsuccessful.
+In this analysis, we conducted two central limit thereom (CLT)-based tests. Due to the sheer size of this dataset, using a simulation based method for analysis is not appropriate. We removed all projects that were "Live" and currently asking for funding, so that any discrepencies seen would be negated. If we had included "Live" projects, each project category may not have been representative of the population and project goal amounts may be skewed. Thereforein the first section of the analysis, we overwrote the Kickstarter dataframe with observations that are not "Live". To analyze success, rather than using the given variable "success", we created our own. The original variable "success" contained cancelled, suspended, and undefined states along with successful and failed states. We had no indication if those projects that were cancelled, suspended, or undefined met their goals and cancelled prematurely or if they cancelled due to no funding at all. To get around this, we created a variable for success that was a ratio of the project's funding raised over their original funding goal. If the funding raised was greater than the funding asked for, the project was successful; if the project goal was greater than the raised funds, the Kickstarter funding was unsuccessful.
 
-To begin our analysis after removing "Live" projects, we assessed whether there is a relationship between the amount of money a creator asks for and its success. We categorized projects by tiers, on a scale of 1-7, with Tier 1 asking for the least amount of funding and Tier 7 the most. We grouped Tiers 1-4 and 5-7 together when we ran our CLT-based test, placing the lower and higher groups in the same category when running a t-test. It would make intuitive sense if the projects that require less funding they will be more successful. These projects that ask for less funding should require a lower volume of money funded and meet their goal and on average meet more of their goals before project funding deadlines. Furthermore, we believed that these projects would require less backers donating money, assuming each backer donates an equal amount, and thus be dependent on a lower amount of people for funding.
+To begin our analysis after removing "Live" projects, we assessed whether there is a relationship between the amount of money a creator asks for and its success. We categorized projects by tiers, on a scale of 1-7, with Tier 1 asking for the least amount of funding and Tier 7 the most. We grouped Tiers 1-4 and 5-7 together when we ran our CLT-based test, placing the lower and higher groups in the same category when running a t-test. It would make intuitive sense if the projects that require less funding then they will be more successful. These projects that ask for less funding should require a lower volume of money funded and meet their goal and on average meet more of their goals before project funding deadlines. Furthermore, we believed that these projects would require less backers donating money, assuming each backer donates an equal amount, and thus be dependent on a lower amount of people for funding.
 
 After establishing a relationship between project success and the intial funding goal, we used a CLT-based test to determine if there was a relationship between project categories and their success. We used the variable "main_category" instead of "category" because the latter was far too specific for our purposes. "Main_category" was composed of 15 distinct categories, each for a unique industry. We felt that 15 categories allowed our analyss to be broader and therefore each could encompass many more projects as not to pigeon hole a creator when using our analysis for their purposes. There may be possible crossover between main categories that we were unable to screen for, however, but we assumed this to be a neglible amount of projects, if it existed at all, and thus continued with "main_category" over "category" for analysis.
 
@@ -124,11 +128,13 @@ kickstarter <- kickstarter %>%
 
 ## Project Goal Amount and Success
 
-In the Explorative Data Analysis section, the first visualization gave an overview of project states, and the second revealed the large difference between the amount of money aimed and raised. However, from those two plots, we couldn't see the goal and pledge amount of each successful and failed projects, neither could we know the whether there is a relationship between the goal and pledge amount. Therefore, we decided to examine the association between projects' success and its goal amount. To do so, we first came up with a claim that states our assumed association.
+In the Explorative Data Analysis section, the first visualization gave an overview of project states, and the second revealed the large difference between the amount of money asked for and raised. However, from those two plots, we could neither see the goal and pledge amount of each successful and failed projects, nor could we know if whether or not there is a relationship between the goal and pledge amount. In lieu of this, we decided to examine the association between projects' success and their goal amount. To do so, we first came up with a claim that states our assumed association.
 
 *Claim*: The more money the project asks for (project goal), the less successful it will be in terms of getting funding.
 
-In order to perform a hypothesis testing on this claim, we need to quantify the goal amount into only a few levels rather than using the original discrete data (amount in USD). Otherwise, sample tests wouldn't work well because of too many data points. We first tried using quantile functions in R, which resulted even numbers of projects in each tier. However, that should not be the intended result, because if the goal amount roughly follows a normal distribution, then a few tiers in the middle would have similar goal amount, which would make the result with sample test less effective. Therefore, we decided to categorize the goal amount using the following metric and to create new variable named usd_goal_real_tier to classify usd_goal_real into tiers:
+In order to perform a hypothesis testing on this claim, we need to quantify the goal amount into only a few levels rather than using the original discrete data (amount in USD). Otherwise, sample tests wouldn't work well because of too many data points. We first tried using quantile functions in R, which resulted even numbers of projects in each tier. However, that should not be the intended result, because if the goal amount roughly follows a normal distribution, then a few tiers in the middle would have similar goal amount, which would make the result with sample test less effective. Therefore, we decided to categorize the goal amount using the following metric and to create new variable named usd_goal_real_tier to classify usd_goal_real into tiers.
+
+The tiers are as follows: Tier 1 < 1,000 in goal USD, Tier 2 $\ge$ 1,000 and < 5,000, Tier 3 $\ge$ 5,000 and < 10,000, Tier 4 $\ge$ 10,000 and < 20,000, Tier 5 $\ge$ 20,000 and < 100,000, Tier 6 $\ge$ 100,000 and < 500,000, and Tier 7 $\ge$ 500,000.
 
 ```{r mutate-goal-tiers,warning=FALSE, message=FALSE, echo=FALSE}
 
@@ -215,7 +221,7 @@ Since our p-value is less than our alpha value, we reject our null hypothesis th
 
 *Question*: Does the category of project influence it’s chance of success?
 
-### Part 1: Visualizing the relative success of each category.
+### Part 1: Visualizing the relative success of each category
 
 * limitations: possible crossover in the main_categories that we cannot screen
 for
@@ -258,7 +264,7 @@ Interestingly, the visualization shows that most categories had more failures th
 
 Only the categories of Comics, Dance, and Theatre had more successess than failures according to our visualizations. 
 
-### Part 2: assessing the relationship between main_category and success.
+### Part 2: assessing the relationship between main_category and success
 
 *Hypotheses*:
 
@@ -282,9 +288,9 @@ there is sufficient evidence to claim that the alternative hypothesis, that ther
 
 ## Project Category and Success
 
-Here we used a linear model to model success. Specifically, we wanted to see how the project's main category leads to differences in the odds of success. We can't model goal or pledged amounts due to the sheer number of outliers in the dataset. There are some projects asking for a penny in USD and others asking for upwards of $100,000,000.
+Here we used a linear model to model success. Specifically, we wanted to see how the project's main category leads to differences in the odds of success.
 
-We used Technology as our reference level to maintain consistency throughout the project.
+We used Technology as our reference level.
 
 ```{r models, echo=FALSE, message=FALSE, warning=FALSE}
 kickstarter$main_category <- factor(
