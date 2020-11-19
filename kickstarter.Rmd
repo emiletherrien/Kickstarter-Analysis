@@ -222,7 +222,7 @@ Since our p-value is less than our alpha value, we reject our null hypothesis th
 
 *Question*: Does the category of project influence it’s chance of success?
 
-**TODO**
+Part 1: Visualizing the relative success of each category.
 
 * limitations: possible crossover in the main_categories that we cannot screen
 for
@@ -266,15 +266,13 @@ ggplot(data = kickstater_success_ratios,
 
   labs(x = "Success",
        y = "Proportion of successful projects",
-
-
        title = "Most Categories Were Not Successful on Average",
        subtitle = "Faceted by Main Category")
 
 #title = "Comics, Dance, Music, and Theater categories had a success ratio greater than 1")+
 
-       title = "Successful vs. Other Projects, grouped by category",
-       subtitle = "Success ratio of Comics, Dance, Music, and Theater categories > 1") +
+       #title = "Successful vs. Other Projects, grouped by category",
+      # subtitle = "Success ratio of Comics, Dance, Music, and Theater categories > 1") +
 
   scale_fill_viridis_d()
 
@@ -290,31 +288,63 @@ ggplot(data = kickstater_success_ratios,
 
 ```
 
-main_category vs. success
+
+We created a new variable called "success" by dividing the amount of money
+pledged by the funding goal. A project was successful if the quotient was 
+greater than or equal to 1.
+
+We then created another variable called "plot_success" which enabled us to plot
+the results while excluding the 1's and 0's.
+
+We plotted histograms to show the ratio of successes to failures ("other") of 
+the projects, faceted by category. By using a ratio of successes to failures, we 
+were able to visualize the relative success of each category.
+
+Interestingly, the visualization shows that most categories had more failures 
+than successes in raising enough money to meet their goals. 
+
+Only the categories of Comics, Dance, and Theatre had more successess than
+failures according to our visualizations. 
+
+
+
+
+Part 2: assessing the relationship between main_category and success.
+
 
 $H_0$: There is no relationship between main_category and success.
 
 $H_1$: There is a relationship between main_category and success. 
 
-Where the $alpha/$ = 0.05
+We will perform a CLT simulation at the $alpha/$ = 0.05.
 
 ```{r chi-square-main_category,warning=FALSE, message=FALSE, echo=FALSE}
-
 
 chisq.test(table(kickstarter_not_live$main_category, 
                  kickstarter_not_live$success_state))
 ```
 
-**TODO**:
+Analysis of Results:
 
-- Olivia: discussion on this chi-squared piece 
+The Chi-squared test compares observed vs. the expected counts that we would 
+expect if the null hypothesis were true.
 
-* state the p-value here
-* describe and justify why you ran a chi-squared test and what information this test will provide you in context of supporting your larger question/hypotheses. There could also be greater explanation of the individual steps you took before completing the overall chi-squared test
-* when there is sufficient evidence to reject the null hypothesis, make a statement about how this means there is sufficient evidence to claim that the alternative is true. This sentence will help bridge the two conclusions made. In the analysis for the project category and success section, it may be clearer to use a word other than “main category” in the hypothesis test conclusion (i.e. say project of category or something more specific in the context of the research than simply what the variable is named in the dataset). 
-* Interpretation of chi-square test could follow a format like this: "Our test statistic was 19624, which has a chi-square distribution with 6 degree of freedom under $H_0$. This corresponds to a p-value less than 2.2e-16. So our decision is to reject $H_0$, and there is sufficient evidence that there is a relationship between a project's monetary goal and a project's state of success."
+We used a Chi-squared test because we want to see if the variables 
+main_category and success_rate are independent of one another in this data set. 
+In other words, running a Chi-squared test helps us evaluate our hypothesis;
+that there is an association between project category and project success rate.
 
-Given that the p-value is less than $alpha/$ = 0.05, we can reject the null hypothesis. Thus, there is sufficient evidence to suggest that there is a relationship between main category and success.
+From our Chi-squared test, we calculate the p-value to be < 2.2e-16
+
+Our test statistic was 16137, which has a Chi-square distribution with 14 
+degrees of freedom under the null hypothesis.This corresponds to a p-value less 
+than 2.2e-16. Thus, our decision is to reject the null hypothesis. Moreover, 
+there is sufficient evidence to claim that the alternative hypothesis, that 
+there is an an association between main category and success, is true. 
+ 
+
+
+
 
 
 
@@ -327,7 +357,7 @@ Here we used a linear model to model success based on main category. Specificall
 **TODO**:
 
 * Provide an explanation of hypotheses and define an alpha value
-* Each bootstrap analysis is only performed with the number of simulations being set to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
+* Each bootstrap analysis is only performed with the number of simulations beingset to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
 * For the project category and success section, although the approach and model of analysis are clear, we believe that a p-value of 1 may be unlikely. In your histogram, the observed difference line is so far from the simulated null distribution that observing that proportion under the null distribution seems very unlikely, at least a probability less than 1. Regardless, in order to make the model more clear, that last histogram should be labeled a lot better, with a title about whether this rejects or fails to reject the null, the number of simulations used for bootstrapping, and what the red line represents.
 
 ```{r simulation-technology,warning=FALSE, message=FALSE, echo=FALSE}
@@ -407,7 +437,10 @@ t.test(kickstart_boot$TECH, mu = 0, alternative = "less")
 ```
 
 
-We have a p-value of 1, which means there is not sufficient evidence at the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of success for main categories other than Technology is the same or greater than the proportion of sucess for Technology. 
+We have a p-value of 1, which means there is not sufficient evidence at 
+the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of 
+success for main categories other than Technology is the same or greater than 
+the proportion of sucess for Technology. 
 
 ## Project Goal Amount and Pledge Amount
 
