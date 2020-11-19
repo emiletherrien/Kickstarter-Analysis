@@ -181,23 +181,25 @@ Now we test our first claim using a CLT-based approach:
 *Hypotheses*:
 
 $H_0$: $p_{less-money}$ $\le$ $p_{more-money}$
+
 $H_1$: $p_{less-money}$ > $p_{more-money}$
 
 
 $H_0$:proportion of people who were  with low money goal - proportion of people 
 who successful with high money <= 0
+
 $H_1$: proportion of people who successful with low money goal - proportion of 
 people who successful with high money > 0.
 
 In simple words, our null hypothesis mean that there are more or equal proportion
 of people who were successful with getting the funding for their projects if the goal
-of their projects was high when compared with people who were successful in getting
-the funding for their projects if the goal was low.
+of their projects was high when compared with the proportion of people who were 
+successful in getting the funding for their projects if the goal was low.
 
-The alternative hypothesis say that there are more or proportion
+The alternative hypothesis say that there are more proportion
 of people who were successful with getting the funding for their projects if the goal
-of their projects was low when compared with people who were successful in getting
-the funding for their projects if the goal was high.
+of their projects was low when compared with the proportion of people who were 
+successful in getting the funding for their projects if the goal was high.
 
 $\alpha$ = 0.05
 
@@ -209,7 +211,8 @@ variables for high money goals described above.
 Our database kick2 is just for the visual purposes- a database with lower tiers
 of goal funding asked.
 
-We conduct the CLT test on kick1 database.
+We conduct the CLT test on kick1 database as the samples are independent and
+more than 30.
 We do a t-test on kick1, with alternative hypothesis set as greater, confidence
 level as 0.95 because our alpha is 0.05. We do this test on our categorical
 variable.
@@ -229,8 +232,18 @@ kick2 <- kickstarter %>%
 t.test(kick1$usd_goal_real_tier, mu = 0, alternative = "greater", conf.level = 0.95)
 ```
 
+This t test tells us how significant the differences among the two groups are.
+Since the confidence level is 0.95, we can expect 95% that the true mean of 
+differences in the proportion would lie between these two intervals, 
+however we can never be sure.
 
-* State the p-value and alpha value explicitly here.
+t statistics is 3111.8.
+
+The alternative hypothesis say that the true mean of the differences in the
+two proportion is greater than 0, which means there is a higher proportion of
+people with success who had a lower funding goal than the proportion of people who
+were successful with a bigger funding goal.
+
 The p value we have got from conducting the t test is < 2.2e-16- a very small number.
 Our alpha value is 0.05
 
@@ -240,7 +253,11 @@ and proportion of projects with more money as goal  and successful less than or
 equal to 0.
 
 This means that we have enough evidence to claim that the alternative hypothesis
-is true.
+is true which also makes sense that  there is a higher proportion
+of people who were successful with getting the funding for their projects if the goal
+of their projects was low when compared with the proportion of people 
+who were successful in getting the funding for their projects if the goal was high.
+
 
 ## Project Category and Success
 
