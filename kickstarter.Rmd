@@ -200,14 +200,16 @@ At the previously stated $\alpha$ level of 0.05, our $\chi^2$ value is 19624 wit
 
 ### Logistic Model for Each Project Tier
 
-Here we used a logistic regression model to predict category success based on the project tier.
+
+Here we used a logistic regression model to predict category success based on
+project tier.
 
 We used Tier 1 as our reference level.
 
 ```{r tier-model}
 kickstarter$usd_goal_real_tier <- factor(
   kickstarter$usd_goal_real_tier, 
-  levels = c(1, 
+  levels = c( 1, 
              2, 
              3, 
              4,
@@ -219,7 +221,7 @@ kickstarter$usd_goal_real_tier <- factor(
 tier_mod = glm(success_state ~ usd_goal_real_tier, data = kickstarter)
 tidy(tier_mod)
 ```
-
+Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance are 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Dance may be the most readily successful project type and is likely worth spending time looking into this category for project creators.
 
 ## Project Category and Success
 
