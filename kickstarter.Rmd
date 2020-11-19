@@ -115,16 +115,7 @@ Following these analyses, we modelled each project's log-odds of success based o
 
 # Data Analysis
 
-## Project Goal Amount and Success
-
-*Claim*: The more money the project asks for (project goal), the less successful it will be in terms of getting funding.
-
-**TODO**: 
-
-* add some context here why we examine this relationship
-* you could explain/justify the specific variables you chose to include such as “used_goal_real_tier”--what does this variable mean and how does the classification into tiers with your mutated variable relate to the larger analysis on goal v. success rate? This will make it easier for the reader to follow along and allow you to have methods with enough detail such that they can be reproducible. Explain how tiers were defined. rationale.
-
-Create a new data frame with projects that are no longer live:
+As explained in the Methodology section, we first need to overwrite the initial kickstarter dataframe with projects that are not "Live":
 
 ```{r exclude-ongoing-projects,warning=FALSE, message=FALSE, echo=FALSE}
 # Exclude ongoing projects
@@ -132,7 +123,13 @@ kickstarter <- kickstarter %>%
   filter(state != "live")
 ```
 
-Create a new variable named usd_goal_real_tier to classify usd_goal_real into tiers:
+## Project Goal Amount and Success
+
+In the Explorative Data Analysis section, the first visualization gave an overview of project states, and the second revealed the large difference between the amount of money aimed and raised. However, from those two plots, we couldn't see the goal and pledge amount of each successful and failed projects, neither could we know the whether there is a relationship between the goal and pledge amount. Therefore, we decided to examine the association between projects' success and its goal amount. To do so, we first came up with a claim that states our assumed association.
+
+*Claim*: The more money the project asks for (project goal), the less successful it will be in terms of getting funding.
+
+In order to perform a hypothesis testing on this claim, we need to quantify the goal amount into only a few levels rather than using the original discrete data (amount in USD). Otherwise, sample tests wouldn't work well because of too many data points. We first tried using quantile functions in R, which resulted even numbers of projects in each tier. However, that should not be the intended result, because if the goal amount roughly follows a normal distribution, then a few tiers in the middle would have similar goal amount, which would make the result with sample test less effective. Therefore, we decided to categorize the goal amount using the following metric and to create new variable named usd_goal_real_tier to classify usd_goal_real into tiers:
 
 ```{r mutate-goal-tiers,warning=FALSE, message=FALSE, echo=FALSE}
 # perhaps need a better way to categorize values in this column
@@ -165,26 +162,27 @@ ggplot(data = chart,
   theme(legend.position = "none")
 ```
 
-Create a new variable for success state
+Then, we created a new binary variable named success_state to represent whether a project was successful or not. If a project is not successful ("failed", "undefined", "suspended", or "canceled"), then it could carry a value of 0. Creating this binary variable gets rid of unnecessary project states so that we could focus only on successful projects.
 
 ```{r mutate-success-state,warning=FALSE, message=FALSE, echo=FALSE}
 kickstarter <- kickstarter %>%
   mutate(success_state = if_else(state == "successful", 1, 0))
 ```
 
+**Farzeen TODO**:
+
+* Add a transition sentence to lead into hypothesis testing.
+* “proportion of people who successful with low money goal." was initially difficult to follow/understand exactly what you are trying to test.
+* in the analysis paragraphs following the tests, including the actual p-value found and the alpha level it was tested against is information that is necessary. This was present in some tests, but was missing in the project goal amount and success section. As an example of how this specifically could be improved, in the project goal amount and success section, you may wish to support your claim of “our p-value is less than our alpha value” with the actual p-value you calculate and the alpha value you are testing in. Additionally, when there is sufficient evidence to reject the null hypothesis, make a statement about how this means there is sufficient evidence to claim that the alternative is true. This sentence will help bridge the two conclusions made. In the analysis for the project category and success section, it may be clearer to use a word other than “main category” in the hypothesis test conclusion (i.e. say project of category or something more specific in the context of the research than simply what the variable is named in the dataset).
+* Each bootstrap analysis is only performed with the number of simulations being set to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
+* explain why you chose certain variables and how you then incorporated those into your hypo test
+* express the hypotheses in notation and then explain the notation's meaning.
+* What's the purpose of having kick2? You did not seem to use it anywhere. Also, please use meaningful variable names so that the code is more readable
+
 *Hypotheses*:
 
 $H_0$: $p({less-money})$ $\le$ $p({more-money})$
 $H_1$: $p({less-money})$ > $p({more-money})$
-
-**TODO**:
-
-* “proportion of people who successful with low money goal." was initially difficult to follow/understand exactly what you are trying to test.
-* in the analysis paragraphs following the tests, including the actual p-value found and the alpha level it was tested against is information that is necessary. This was present in some tests, but was missing in the project goal amount and success section. As an example of how this specifically could be improved, in the project goal amount and success section, you may wish to support your claim of “our p-value is less than our alpha value” with the actual p-value you calculate and the alpha value you are testing in. Additionally, when there is sufficient evidence to reject the null hypothesis, make a statement about how this means there is sufficient evidence to claim that the alternative is true. This sentence will help bridge the two conclusions made. In the analysis for the project category and success section, it may be clearer to use a word other than “main category” in the hypothesis test conclusion (i.e. say project of category or something more specific in the context of the research than simply what the variable is named in the dataset).
-* Each bootstrap analysis is only performed with the number of simulations being set to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
-
-* explain why you chose certain variables and how you then incorporated those into your hypo test
-* express the hypotheses in notation and then explain the notation's meaning.
 
 $H_0$:proportion of people who successful with low money goal - proportion of people who successful with high money <= 0
 $H_1$: proportion of people who successful with low money goal - proportion of people who successful with high money > 0 
@@ -204,7 +202,7 @@ kick2 <- kickstarter %>%
 t.test(kick1$usd_goal_real_tier, mu = 0, alternative = "greater", conf.level = 0.95)
 ```
 
-**TODO**:
+**Farzeen TODO**:
 
 * State the p-value and alpha value explicitly here.
 * Currently the statement is repeatitive because you said twice "we reject our null hypothesis that". 
