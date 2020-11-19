@@ -253,7 +253,7 @@ kickstater_success_ratios = kickstart_success %>%
   group_by(main_category, success) %>% 
   count(success) 
 
-kickstater_success_ratios <- kickstarter_not_live %>% 
+kickstater_success_ratios = kickstarter_not_live %>% 
 
 kickstater_success_ratios <- kickstarter %>% 
 
@@ -371,8 +371,15 @@ differences in the odds of success.
 
 **TODO**:
 
-* Provide an explanation of hypotheses and define an alpha value
-* Each bootstrap analysis is only performed with the number of simulations beingset to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
+
+
+$H_0$: There is no relationship between main_category and odds of success.
+
+$H_1$: There is a relationship between main_category and odds of success. 
+
+We will perform a simulation at the $alpha/$ = 0.05.
+
+* Each bootstrap analysis is only performed with the number of simulations being set to 500. However, the more simulations there are, the more accurate the prediction of the relationship in the data will be. Therefore, any simulation-based methods used to evaluate hypotheses of interest should be set to at least 1000 simulations, instead.
 * For the project category and success section, although the approach and model of analysis are clear, we believe that a p-value of 1 may be unlikely. In your histogram, the observed difference line is so far from the simulated null distribution that observing that proportion under the null distribution seems very unlikely, at least a probability less than 1. Regardless, in order to make the model more clear, that last histogram should be labeled a lot better, with a title about whether this rejects or fails to reject the null, the number of simulations used for bootstrapping, and what the red line represents.
 
 ```{r simulation-technology,warning=FALSE, message=FALSE, echo=FALSE}
@@ -406,9 +413,9 @@ other = kickstart_boot %>%
 
   filter(TECH != "TECH")
 
-boot_samp <- numeric(500)
+boot_samp <- numeric(1000)
 
-for(i in 1:500){
+for(i in 1:1000){
   boot_tech <- tech %>% 
     slice(sample(1:nrow(tech), replace = T)) %>% 
     count(success) %>% 
@@ -455,7 +462,7 @@ t.test(kickstart_boot$TECH, mu = 0, alternative = "less")
 We have a p-value of 1, which means there is not sufficient evidence at 
 the $\alpha$ = 0.05 level to reject the null hypothesis that the proportion of 
 success for main categories other than Technology is the same or greater than 
-the proportion of sucess for Technology. 
+the proportion of succxsess for Technology. 
 
 ## Project Goal Amount and Pledge Amount
 
