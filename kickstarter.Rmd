@@ -194,23 +194,25 @@ chisq.test(table(kickstarter$usd_goal_real_tier,
                  kickstarter$success_state))
 ```
 
+**Analysis of Results:**
+
 At the previously stated $\alpha$ level of 0.05, our $\chi^2$ value is 19624 with 6 degrees of freedom and a p-value of less than 2.2e-16. Since our p-value is less than our alpha value, we have enough evidence to reject our null hypothesis that the Tier a project is independent of its success. There is enough evidence to suggest that a project's Tier is related to its success rate.
 
 ### Logistic Model for Each Project Tier
 
 ```{r tier-model}
-kickstarter$main_category <- factor(
+kickstarter$usd_goal_real_tier <- factor(
   kickstarter$usd_goal_real_tier, 
-  levels = c("1", 
-             "2", 
-             "3", 
-             "4",
-             "5", 
-             "6", 
-             "7")
+  levels = c(1, 
+             2, 
+             3, 
+             4,
+             5, 
+             6, 
+             7)
   )
 
-tier_mod = lm(success_state ~ usd_goal_real_tier, data = kickstarter)
+tier_mod = glm(success_state ~ usd_goal_real_tier, data = kickstarter)
 tidy(tier_mod)
 ```
 
