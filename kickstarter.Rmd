@@ -238,7 +238,7 @@ tidy(tier_mod) %>%
   select(term, estimate)
 ```
 
-Relative to Tier 1, the most likely funded project category tier is Tier 1. The odds of success for tier 2, holding everything constant, is 0.76 times the odds of success for the Tier 1 projects. The odds of success decrease for each increase in Tier, as well, holding all eslse constant and relative to Tier 1.
+Relative to Tier 1, the most likely funded project category tier is Tier 1. The odds of success for Tier 2, holding everything constant, is 0.76 times the odds of success for the Tier 1 projects. The odds of success decrease for each increase in Tier, as well, holding all eslse constant and relative to Tier 1.
 
 Furthermore, all else being equal, the estimated probability of success for the Tier 1 projects is 0.51, whereas for Tier 2 the probability of success is 0.44. There is sufficient evidence based on our model to suggest that Tier 1 funding may be the most readily successful project Tier, and that the probability of success is over 0.50 only for Tier 1. All other tiers' probability of success are: 2 (p = 0.44), 3 (p = 0.36), 4 (p = 0.32), 5 (p = 0.22), 6 (p = 0.09), and 7 (p = 0.03).
 
