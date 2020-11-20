@@ -225,15 +225,16 @@ kickstarter$usd_goal_real_tier <- factor(
   kickstarter$usd_goal_real_tier, 
   levels = c(1, 2, 3, 4, 5, 6, 7))
 
-tier_mod = glm(success_state ~ usd_goal_real_tier, data = kickstarter)
+tier_mod = glm(success_state ~ usd_goal_real_tier, data = kickstarter,
+               family = binomial)
 
 tidy(tier_mod) %>%
   select(term, estimate)
 ```
 
-Relative to tier 1, the most likely funded project category tier is Tier 1. The odds of success for tier 2, holding everything constant, is 0.9347 times the odds of success for the Tier 1 projects. The odds of success decrease for each increase in Tier, relative to Tier 1.
+Relative to Tier 1, the most likely funded project category tier is Tier 1. The odds of success for tier 2, holding everything constant, is 0.76 times the odds of success for the Tier 1 projects. The odds of success decrease for each increase in Tier, as well, holding all eslse constant and relative to Tier 1.
 
-Furthermore, all else being equal, the estimated probability of success for the Tier 1 projects are 0.62, whereas for Tier 2 the probability of success is 0.61. There is sufficient evidence based on our model to suggest that Tier 1 funding may be the most readily successful project Tier, and that the probability of success is over 0.50 for Tiers 1, 2, 3 (p = 0.59), 4 (p = 0.58), 5 (p = 0.55), 6 (p = 0.52), and 7 (p = 0.51).
+Furthermore, all else being equal, the estimated probability of success for the Tier 1 projects is 0.51, whereas for Tier 2 the probability of success is 0.44. There is sufficient evidence based on our model to suggest that Tier 1 funding may be the most readily successful project Tier, and that the probability of success is over 0.50 only for Tier 1. All other tiers' probability of success are: 2 (p = 0.44), 3 (p = 0.36), 4 (p = 0.32), 5 (p = 0.22), 6 (p = 0.09), and 7 (p = 0.03).
 
 ## Project Category and Success
 
