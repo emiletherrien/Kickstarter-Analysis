@@ -15,7 +15,7 @@ However, many more projects failed to reach their goals, and our group is intere
  
 We will be exploring which variables influence the success of a Kickstarter project by observing which types of projects are more likely to be funded. 
 
-Our research queston is:
+Our research question is:
 
 What differences between Kickstarter projects influence their chances of success?
 
@@ -124,7 +124,7 @@ ggplot(data = pledged_goals,
   scale_fill_viridis_d()
 ```
 
-The average funding pledged was 9058.92, with a standard deviation of 90,973.34. In comparison, the average funding goal was 45,454 with a standard deviation of 1,152,950. The observed differences between both groups is tremendous.
+The average funding pledged was $9058.92, with a standard deviation of $90,973.34. In comparison, the average funding goal was $45,454 with a standard deviation of $1,152,950. The observed differences between both groups is tremendous.
 
 # Methodology
 
@@ -290,7 +290,7 @@ ggplot(data = kickstater_success_ratios,
   theme(legend.position = "none")
 ```
 
-<<<<<<< HEAD
+
 
 
 Interestingly, the visualization shows that most categories had more failures 
@@ -311,11 +311,11 @@ Interestingly, the visualization shows that more categories failed in raising
 enough money to meet their goals than those that achieved their monetary goal. 
 Only the categories of Comics, Dance, and Theatre had more successess than 
 failures according to our visualizations.
-=======
+
 We created another variable called _plot_success_ which enabled us to plot the whether the project was successful or not, excluding the 1's and 0's that our previous indicator used. We plotted bar charts to show the proportion of successful to all the other projects, faceted by category. By using a ratio of successes to others, we were able to visualize the relative success of each category on the same scale.
 
 Interestingly, the visualization shows that more categories failed in raising enough money to meet their goals than those that achieved their monetary goal. Only the categories of Comics, Dance, and Theatre had more successes than failures according to our visualizations.
->>>>>>> d8b9b69b68dd79ff5464311313b5dadc476aad50
+
 
 **Hypotheses**:
 
@@ -456,7 +456,9 @@ an association between main category and success, is true.
 
 ## Logistic Regression Model to Predict Category Success
 
-Here we used a logistic regression model to predict category success. Specifically, we wanted to see how the project's main category leads to differences in the odds of success.
+Here we used a logistic regression model to predict category success. 
+Specifically, we wanted to see how the project's main category leads to 
+differences in the odds of success.
 
 We used Technology as our reference level.
 
@@ -500,12 +502,44 @@ Relative to Technology, the most likely funded project category is Dance. The od
 
 # Discussion
 
+
+The aim of this project was to explore which variables influence the success of 
+a Kickstarter project. We did so by analyzing which types of projects are more 
+likely to be funded. We wanted to know whether the project goal (in USD) was 
+associated with its chance of success; what amount of money asked for would be 
+more likely to succeed; whether the project category was associated with its 
+chance of success; and which category of project is more likely to succeed.
+
+For our exploratory data analysis (EDA), we first created a table that showed the 
+count of each Kickstarter Project State. This table showed us that the most 
+common outcome for a project in this data set is 'failure.'
+
+We then modeled the distribution of project states in a bar plot, again finding 
+that more projects failed than succeeded.
+
+Finally, we calculated the mean goal amount and the mean pledged amount, and 
+plotted the two on a bar plot. This EDA shpowed us that the average funding 
+pledged was $9,058.92, with a standard deviation of $90,973.34. In comparison, 
+the average funding goal was $45,454 with a standard deviation of $1,152,950. 
+The observed mean average funding goal was approximately five times higher than 
+the average.
+
+Our EDA showed us that the odds are stacked against most kickstarter projects in 
+terms of being likely to successfully reaching their funding goal. However, 
+
+
+
+
+
+
 Farzeen: This will require a summary of what you have learned about your research question along with statistical arguments supporting your conclusions. 
 
 Olivia: Also, critique your own methods and provide suggestions for improving your analysis. Issues pertaining to the reliability and validity of your data and appropriateness of the statistical analysis should also be discussed here. 
 
-<<<<<<< HEAD
 
-=======
+
+
+
+
+
 The Kickstarter dataset we have is a rigorous collection of data to give project creators insight into which projects have historically succeeded. The dataset is limited, however. We have been able to give creators the statistical odds of success based on monetary and categorical variables, yet have neither looked into how long each project was on Kickstarter for funding, nor what time of the year donations may spike. People may be more charitable during the holiday period, and that may lead to more projects being funded. Not then only would creators have the knowledge of which projects secured funding based off the funding goal and category, but they would also have tools now on when to launch their Kickstarter funding. Furthermore, a dataset on how each project managed their marketing campaign would be more than helpful to creators. Sentiment analysis of the campaign, along with its length, how often it changed, the target audience, and where it was marketed (socials, print, word of mouth, etc) would be the start of this dataset. All told, this analysis we have done is the start of a much larger project. We have shown that there are influencers on a project's funding success, and finding those with the largest influence should be the next priority to complete this project.
->>>>>>> d8b9b69b68dd79ff5464311313b5dadc476aad50
