@@ -238,7 +238,7 @@ tidy(tier_mod) %>%
   select(term, estimate)
 ```
 
-Relative to Tier 1, the most likely funded project category tier is Tier 1. The odds of success for Tier 2, holding everything constant, is 0.76 times the odds of success for the Tier 1 projects. The odds of success decrease for each increase in Tier, as well, holding all eslse constant and relative to Tier 1.
+Relative to Tier 1, the most likely funded project category tier is Tier 1. The odds of success for Tier 2, holding everything constant, is 0.76 times the odds of success for the Tier 1 projects. The odds of success decrease for each increase in Tier, as well, holding all else constant and relative to Tier 1.
 
 Furthermore, all else being equal, the estimated probability of success for the Tier 1 projects is 0.51, whereas for Tier 2 the probability of success is 0.44. There is sufficient evidence based on our model to suggest that Tier 1 funding may be the most readily successful project Tier, and that the probability of success is over 0.50 only for Tier 1. All other tiers' probability of success are: 2 (p = 0.44), 3 (p = 0.36), 4 (p = 0.32), 5 (p = 0.22), 6 (p = 0.09), and 7 (p = 0.03).
 
@@ -536,21 +536,43 @@ idea of which main categories were most popular in terms of pitching kickstarter
 projects. 
 
 
-
-
-
-
-
-
-
-
-Farzeen: This will require a summary of what you have learned about your research question along with statistical arguments supporting your conclusions. 
+Farzeen: This will require a summary of what you have learned about your research
+question along with statistical arguments supporting your conclusions. 
+ 
+ In our analysis, we have basically answered few questions such as the relationship
+ between the funding tiers ( from 1 till 7) and the success-rates of these projects.
+ We defined success_state as successful if these projects reached the funding
+ goal.We also studied various other factors that influence the success_state of
+ the project such as categories of the projects.
+ 
+ For our first analysis, we divided the funding amount into 7 tiers so that it
+ is easier for us to compare the funding money. We used the chi-squared test to
+ check if the two variables we are testing - usd_goal_real_tier 
+ (just referred to as Tier in future) and success_rate-
+ independent.From our results we concluded that there is enough evidence to suggest 
+ that a project's Tier is related to its success rate.The next question is how is
+ project's Tier related to the success rate of the project.For this part, we used 
+ the projects with usd_goal_real_tier =1 as a reference level to our linear 
+ regression logistic model to see how other Tier's compare to this model.We calculated
+ the odds of success and found out that Tier 2 comes closest in the competition for
+ high success_state but has 0.76 times the odds of success for the Tier 1 projects.
+ We also calculated the probability of success for each tier and found out that Tier 1
+ indeed has the highest probability of success.
+ 
+ This makes complete sense because it is more likely a person is able to complete
+ the funding for the project if the funding goal is low.
+ 
+ The second hypothesis was how are the categories of projects influencing the
+ success_state of the project.We used a Chi-squared test so we could analyze if the
+ variables tested - main category and success_rate - are independent of one another 
+ in this data set. In other words, running a Chi-squared test helps us evaluate 
+ our hypothesis; that there is an association between project category and project 
+ success rate. Now we can see which categories are most likely to be funded. We use
+ a logistic model and keep technology category as our reference level. We were
+ surprised to find that dance is the category most likely to be funded.
+ 
 
 Olivia: Also, critique your own methods and provide suggestions for improving your analysis. Issues pertaining to the reliability and validity of your data and appropriateness of the statistical analysis should also be discussed here. 
-
-
-
-
 
 
 
