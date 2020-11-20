@@ -303,8 +303,6 @@ chisq.test(table(kickstarter$main_category, kickstarter$success_state))
 
 **Analysis of Results:**
 
-We used a Chi-squared test because we want to see if the variables main_category and success_rate are independent of one another in this data set. In other words, running a Chi-squared test helps us evaluate our hypothesis; that there is an association between project category and project success rate.
-
 Our test statistic was 16137, which has a Chi-square distribution with 14 degrees of freedom under the null hypothesis. This corresponds to a p-value less than 2.2e-16. Thus, our decision is to reject the null hypothesis. Moreover, there is sufficient evidence to claim that the alternative hypothesis, that there is an an association between _main_category_ and _success_, is true. 
 
 ## Logistic Regression Model to Predict Category Success
@@ -349,7 +347,7 @@ category_probs_map <- map(success_mod$estimate, category_probs)
 category_probs_tibble <- tibble(category_probs_map)
 ```
 
-Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance are 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Dance may be the most readily successful project type and is likely worth spending time looking into this category for project creators.
+Relative to _Technology_, the most likely funded project category is _Dance_. The odds of success for _Dance_ are 6.374285 times the odds of success for _Technology_. Furthermore, all else being equal, the estimated probability of success for the _Dance_ _main_category_ is 0.62, whereas for _Technology_ the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Dance may be the most readily successful project type and is likely worth spending time looking into this category for project creators.
 
 # Discussion
 
