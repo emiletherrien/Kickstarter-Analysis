@@ -9,7 +9,7 @@ output: pdf_document
 
 ## Introduction
 
-Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since the platform launched in 2009, 19 million people have pledged to back up various projects, and nearly 190,000 projects have been successfully funded.
+Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need financial support for their projects. Since the platform launched in 2009, 19 million people have pledged to back up various projects, and nearly 190,000 projects have been successfully funded.
 
 However, many more projects failed to reach their goals, and our group is interested in analyzing what made projects succeed and fail. The dataset [Kickstarter Projects](https://www.kaggle.com/kemical/kickstarter-projects) comes from Kaggle, which contains Kickstarter projects up until January 2018.
  
@@ -148,11 +148,11 @@ kickstarter <- kickstarter %>%
 
 ## Project Goal Amount and Success
 
-In the Exploratory Data Analysis section, the first visualization gave an overview of project states, and the second revealed the large difference between the amount of money asked for and raised. However, from those two plots, we could neither see the goal and pledge amount of each successful and failed projects, nor could we know if whether or not there is a relationship between the goal and pledge amount. In lieu of this, we decided to examine the association between projects' success and their goal amount. To do so, we first came up with a claim that states our assumed association.
+In the Exploratory Data Analysis section, the first visualization gave an overview of project states, and the second revealed the large difference between the amount of money asked for and raised. However, from those two plots we could neither see the goal or pledge amount of each successful and failed project, nor could we know whether or not there is a relationship between the goal and pledge amount. In lieu of this, we decided to examine the association between projects' success and their goal amount. To do so, we first came up with a claim that states our assumed association.
 
 **Claim**: The amount of money a project asks for is related to its success in getting enough funding.
 
-In order to perform a hypothesis testing on this claim, we need to quantify the goal amount into only a few levels rather than using the original continuous data (amount in USD). Otherwise, sample tests wouldn't work well because of too many data points. We decided that using a tier system would better suit our purposes of determining a relationship between success and how much money a project asks for. Furthermore, visualizing the project tier can give insight to how many projects fall in each range. Therefore, we decided to categorize the goal amount using the following metric and to create new variable named _usd_goal_real_tier_ to classify _usd_goal_real_ into tiers.
+In order to perform a hypothesis test on this claim, we needed to quantify the goal amount into levels to make the data discrete rather than using the original continuous data. We decided that using a tier system would better suit our purposes to determine a relationship between success and how much money a project asks for. Furthermore, visualizing the project tier gave insight to how many projects fall in each range. Therefore, we decided to categorize the goal amount using the following metric and to create new variable named _usd_goal_real_tier_ which classifies _usd_goal_real_ into tiers.
 
 The tiers are as follows: Tier 1 < 1,000 in goal USD, Tier 2 $\ge$ 1,000 and < 5,000, Tier 3 $\ge$ 5,000 and < 10,000, Tier 4 $\ge$ 10,000 and < 20,000, Tier 5 $\ge$ 20,000 and < 100,000, Tier 6 $\ge$ 100,000 and < 500,000, and Tier 7 $\ge$ 500,000.
 
@@ -197,7 +197,7 @@ kickstarter <- kickstarter %>%
   mutate(success_state = if_else(state == "successful", 1, 0))
 ```
 
-Now we test our first claim using a CLT-based approach:
+We then tested our first claim using a CLT-based approach:
 
 **Hypotheses**:
 
@@ -206,7 +206,7 @@ At the $\alpha$ = 0.05 level:
 * $H_0$: $project_{tiers}$ and $project_{success}$ have no relationship
 * $H_1$: There is a relationship between $project_{tiers}$ and $project_{success}$, where $project_{tiers}$ is the variable _usd_goal_real_tiers_ and $project_{success}$ the variable _success_state_.
 
-Our following CLT approach is testing whether or not there is a relationship between how much money a project attempts to raise and its success.
+Our following $\chi^2$ test is assessing whether or not there is a relationship between how much money a project attempts to raise and its success.
 
 ```{r money-eval,warning=FALSE, message=FALSE, echo=FALSE}
 set.seed(1)
@@ -216,9 +216,7 @@ chisq.test(table(kickstarter$usd_goal_real_tier, kickstarter$success_state))
 
 **Analysis of Results:**
 
-At the previously stated $\alpha$ level of 0.05, our $\chi^2$ value is 19624 with 6 degrees of freedom and a p-value of less than 2.2e-16. Since our p-value is less than our $\alpha$ value, we have enough evidence to reject our null hypothesis that the Tier a project is independent of its success. There is enough evidence to suggest that a project's Tier is related to its success rate.
-
-Since our p-value is less than our $\alpha$ value, we reject our null hypothesis that the difference in the proportion of projects with less money as goal and proportion of projects with more money as goal is less than or equal to 0. This means we reject the null hypothesis that success rate for projects with bigger money is equal or higher than projects with lower money.
+At the previously stated $\alpha$ level of 0.05, our $\chi^2$ value is 19,624 with 6 degrees of freedom and a p-value of less than 2.2e-16. Since our p-value is less than our $\alpha$ value, we have enough evidence to reject our null hypothesis that the Tier a project is independent of its success. There is enough evidence to suggest that a project's Tier is related to its success rate.
 
 ## Logistic Model for Success based on Project Tiers
 
@@ -244,8 +242,7 @@ Furthermore, all else being equal, the estimated probability of success for the 
 
 ## Project Category and Success
 
-We are studying the question of whether the main category of a project influences its rate of success. We decided to use main category rather than category, because the latter was too broad for our project. _main_category_ is composed of 15 distinct categories, each for a unique 
-industry.
+To determine whether the main category of a project influences its rate of success we used another $\chi^2$ test to assess a relationship. We decided to use the variable _main_category_ rather than _category_, because the latter was too broad for our project. _Main_category_ is composed of 15 distinct categories, each for a unique industry.
 
 The accuracy of our analysis for this question is limited by the fact there could be possible crossovers in the main_categories that we cannot screen for. We assumed this to be a negligible amount of projects, if it existed at all, and thus continued with _main_category_ over _category_ for analysis.
 
@@ -366,10 +363,10 @@ Our EDA showed us that the odds are stacked against most kickstarter projects in
 
 However, it would have also been helpful to plot a bar chart of the count of the main project categories to see which ones were most popular. This would have been good to know going into the deeper analysis section, as it would have given us an idea of which main categories were most popular in terms of pitching kickstarter projects.
 
-In our analysis, we answered 2 questions: if there was a relationship between the funding tiers (from 1 to 7) and the probability of success of these projects and if there was a relationship between the _main_category_ and probability of success. We defined _success_state_ as successful if these projects were classified as _successful_ rather than _cancelled_, _suspended_, or _undefined_.
+In our analysis, we answered 2 questions: if there was a relationship between the funding tiers (from 1 to 7) and the probability of success of these projects and if there was a relationship between the _main_category_ and probability of success. We defined _success_state_ as successful if these projects were classified as _successful_ rather than _failed_, _cancelled_, _suspended_, or _undefined_.
  
 For our first analysis, we divided the funding amount into 7 tiers so that we could compare the money funded on a discrete scale. We used a $\chi^2$ test to check if the two variables we were testing- usd_goal_real_tier (just referred to as Tier in future) and success_rate- were independent. From our results we concluded that there is enough evidence to suggest that a project's Tier is related to its success rate. The next question was how a project's Tier was related to its success of funding. For this part, we used the projects with _usd_goal_real_tier_ = 1 as a reference level to our logistic regression model. We calculated the odds of success and found out that Tier 2 was closest to the Tier 1 _success_state_, but that this tier had 0.76 times the odds of success compared to the Tier 1 projects. We also calculated the probability of success for each tier and determined Tier 1 projects have the highest probability of success. This makes sense because it is more likely a person is able to complete the funding for the project if the funding goal is low.
  
-The second hypothesis asked how the categories of projects influenced the _success_state_ of the project. We used a $\chi^2$ test so we could analyze if the variables tested- _main_category_ and _success_state_- were independent of one another in this data set. In other words, running a $\chi^2$ test helped us evaluate our hypothesis that there is an association between project category and project success. We can see which categories are most likely to be funded. We used a logistic regression model and had _Technology_ as our reference level. We were surprised to find that dance was the category most likely to be funded.
+The second hypothesis asked how the categories of projects influenced the _success_state_ of the project. We used a $\chi^2$ test so we could analyze if the variables tested- _main_category_ and _success_state_- were independent of one another in this data set. In other words, running a $\chi^2$ test helped us evaluate our hypothesis that there is an association between project category and project success. We can see which categories are most likely to be funded. We used a logistic regression model and had _Technology_ as our reference level. We were surprised to find that _Dance_ was the category most likely to be funded.
 
 The Kickstarter dataset we have is a rigorous collection of data to give project creators insight into which projects have historically succeeded. The dataset is limited, however. We have been able to give creators the statistical odds of success based on monetary and categorical variables, yet have neither looked into how long each project was on Kickstarter for funding, nor what time of the year donations may spike. People may be more charitable during the holiday period, and that may lead to more projects being funded. Not then only would creators have the knowledge of which projects secured funding based off the funding goal and category, but they would also have tools now on when to launch their Kickstarter funding. Furthermore, a dataset on how each project managed their marketing campaign would be more than helpful to creators. Sentiment analysis of the campaign, along with its length, how often it changed, the target audience, and where it was marketed (socials, print, word of mouth, etc) would be the start of this dataset. All told, this analysis we have done is the start of a much larger project. We have shown that there are influencers on a project's funding success, and finding those with the largest influence should be the next priority to complete this project.
