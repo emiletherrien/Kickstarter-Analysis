@@ -15,16 +15,21 @@ However, many more projects failed to reach their goals, and our group is intere
  
 We will be exploring which variables influence the success of a Kickstarter project by observing which types of projects are more likely to be funded. 
 
-Our questions include:
+Our research queston is:
+
+What differences between Kickstarter projects influence their chances of success?
+
+We will answer our research question by the analyzing the data in the context of the following questions:
 
 1. Is the project goal (in USD) associated with its chance of success?
-2. Is the project category associated with its chance of success?
-3. Which category of project is more likely to succeed?
+2. What amount of money asked for will be more likely to succeed?
+3. Is the project category associated with its chance of success?
+4. Which category of project is more likely to succeed?
 
 Our hypotheses include:
 
 1. The more money a project asks for, the less likely it will be successful raising funding.
-2. The project category is associated with the success rate, and certain categories perform better than others.
+2. The project category is associated with the success rate, and certain categories outperform others in terms of success.
 
 The goal of the project is to give future Kickstarter creators insight into which projects failed and succeeded. This will give them the tools to perform better against their competition, by giving estimates for what has and has not worked based on this historical dataset. Modeling which categories will be most successful best will give creators insight into predicted category success, assuming that there exists a relationship between project categories and success rates.
 
@@ -34,6 +39,7 @@ The goal of the project is to give future Kickstarter creators insight into whic
 library(tidyverse)
 library(broom)
 library(knitr)
+library(purrr)
 
 kickstarter <- read_csv("data/ks-projects-201801.csv")
 glimpse(kickstarter)
@@ -146,7 +152,7 @@ In the Exploratory Data Analysis section, the first visualization gave an overvi
 
 **Claim**: The amount of money a project asks for is related to its success in getting enough funding.
 
-In order to perform a hypothesis testing on this claim, we need to quantify the goal amount into only a few levels rather than using the original discrete data (amount in USD). Otherwise, sample tests wouldn't work well because of too many data points. We decided that using a tier system would better suit our purposes of determining a relationship between success and how much money a project asks for. Furthermore, visualizing the project tier can give insight to how many projects fall in each range. Therefore, we decided to categorize the goal amount using the following metric and to create new variable named _usd_goal_real_tier_ to classify _usd_goal_real_ into tiers.
+In order to perform a hypothesis testing on this claim, we need to quantify the goal amount into only a few levels rather than using the original continuous data (amount in USD). Otherwise, sample tests wouldn't work well because of too many data points. We decided that using a tier system would better suit our purposes of determining a relationship between success and how much money a project asks for. Furthermore, visualizing the project tier can give insight to how many projects fall in each range. Therefore, we decided to categorize the goal amount using the following metric and to create new variable named _usd_goal_real_tier_ to classify _usd_goal_real_ into tiers.
 
 The tiers are as follows: Tier 1 < 1,000 in goal USD, Tier 2 $\ge$ 1,000 and < 5,000, Tier 3 $\ge$ 5,000 and < 10,000, Tier 4 $\ge$ 10,000 and < 20,000, Tier 5 $\ge$ 20,000 and < 100,000, Tier 6 $\ge$ 100,000 and < 500,000, and Tier 7 $\ge$ 500,000.
 
@@ -334,8 +340,16 @@ kickstarter$main_category <- factor(
 success_mod = glm(success_state ~ main_category,
                   data = kickstarter, family = "binomial")
 
-tidy(success_mod) %>% 
+success_mod  = tidy(success_mod) %>% 
   select(term, estimate)
+success_mod
+
+category_probs <- function(x){
+  exp(-1.38714883 + x)/(1 + exp(-1.38714883	+ x))
+}
+
+category_probs_map <- map(success_mod$estimate, category_probs)
+category_probs_tibble <- tibble(category_probs_map)
 ```
 
 Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance are 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Dance may be the most readily successful project type and is likely worth spending time looking into this category for project creators.
