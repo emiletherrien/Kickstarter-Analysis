@@ -128,7 +128,7 @@ Due to the sheer size of this dataset, using a simulation based method for analy
 
 After determining this relationship, we used a Logistic Regression Model to show the differences in success between Tiers. It would make intuitive sense if the projects that require less funding then they will be more successful. These projects that ask for less funding should require a lower volume of money funded and meet their goal and on average meet more of their goals before project funding deadlines. Furthermore, we believed that these projects would require less backers donating money, assuming each backer donates an equal amount, and thus be dependent on a lower amount of people for funding.
 
-After establishing a relationship between project success and the initial funding goal and modeling the predicted success based on each Tier, we used another $\chi^2$ Test to determine if there was a relationship between project categories and their success. We used the variable _main_category_ instead of _category_ because the latter was far too specific for our purposes. _main_category_ was composed of 15 distinct categories, each for a unique industry. We felt that 15 categories allowed our analysis to be broader and therefore each could encompass many more projects as not to pigeon hole a creator when using our analysis for their purposes. There may be possible crossover between main categories that we were unable to screen for, however, but we assumed this to be a negligible amount of projects, if it existed at all, and thus continued with _main_category_ over _category_ for analysis.
+After establishing a relationship between project success and the initial funding goal and modeling the predicted success based on each Tier, we used another $\chi^2$ Test to determine if there was a relationship between project categories and their success. We used the variable _main_category_ instead of _category_ because the latter was far too specific for our purposes. _Main_category_ was composed of 15 distinct categories, each for a unique industry. _Category_ was composed of 159 unique categories. We felt that 15 categories allowed our analysis to be broader and therefore each could encompass many more projects as not to pigeon hole a creator when using our analysis for their purposes. There may be possible project crossover between main categories that we were unable to screen for, however, but we assumed this to be a negligible amount of projects, if it existed at all, and thus continued with _main_category_ over _category_ for analysis.
 
 Following these analyses, we modeled each project's log-odds of success based on _main_category_. Success here was a boolean value, with 1 representing successful funding and 0 representing unsuccessful funding. This model enables future creators to think about their project in the larger scheme of a category and base their opinions off these values. We ran a Logistic Regression Model, where _Technology_ was used as the reference level, and each value is based off success relative to the technology category. We used a proportionality level of 0.50 to determine if a project category was worth pursuing. A level greater than 0.50 meant that the category was predicted to have more successful projects than unsuccessful ones.
 
@@ -231,7 +231,7 @@ tidy(tier_mod) %>%
   select(term, estimate)
 ```
 
-Relative to tier 1, the most likely funded project category tier is Tier 1. The odds of success for tier 2, holding everything constant, is $e^{-0.067468}$ = 0.9347 times the odds of success for the Tier 1 projects.
+Relative to tier 1, the most likely funded project category tier is Tier 1. The odds of success for tier 2, holding everything constant, is 0.9347 times the odds of success for the Tier 1 projects. The odds of success decrease for each increase in Tier, relative to Tier 1.
 
 Furthermore, all else being equal, the estimated probability of success for the Tier 1 projects are 0.62, whereas for Tier 2 the probability of success is 0.61. There is sufficient evidence based on our model to suggest that Tier 1 funding may be the most readily successful project Tier, and that the probability of success is over 0.50 for Tiers 1, 2, 3 (p = 0.59), 4 (p = 0.58), 5 (p = 0.55), 6 (p = 0.52), and 7 (p = 0.51).
 
@@ -240,7 +240,7 @@ Furthermore, all else being equal, the estimated probability of success for the 
 We are studying the question of whether the main category of a project influences its rate of success. We decided to use main category rather than category, because the latter was too broad for our project. _main_category_ is composed of 15 distinct categories, each for a unique 
 industry.
 
-The accuracy of or analysis for this question is limited by the fact there could be possible crossovers in the main_categories that we cannot screen for. We assumed this to be a negligible amount of projects, if it existed at all, and thus continued with _main_category_ over _category_ for analysis.
+The accuracy of our analysis for this question is limited by the fact there could be possible crossovers in the main_categories that we cannot screen for. We assumed this to be a negligible amount of projects, if it existed at all, and thus continued with _main_category_ over _category_ for analysis.
 
 **Question**: Does the main category of project influence it’s chance of success?
 
@@ -337,7 +337,7 @@ tidy(success_mod) %>%
   select(term, estimate)
 ```
 
-Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance are $e^{-1.38714883}$ = 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Dance may be the most readily successful project type and is likely worth spending time looking into this category for project creators.
+Relative to Technology, the most likely funded project category is Dance. The odds of success for Dance are 6.374285 times the odds of success for Technology. Furthermore, all else being equal, the estimated probability of success for the Dance category is 0.62, whereas for Technology the probability of success is 0.21. There is sufficient evidence based on our model to suggest that Dance may be the most readily successful project type and is likely worth spending time looking into this category for project creators.
 
 # Discussion
 
