@@ -6,8 +6,8 @@ output: pdf_document
 ---
 
 # Introduction
-Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since launching in 2009, 19 million people have pledged to back up projects, and nearly 190,000 projects have been successfully funded.
- 
+Have you ever had an ambitious idea but did not have resources to pursue it? Kickstarter is a crowdfunding platform for creators who need support for their projects. Since the platform launched in 2009, 19 million people have pledged to back up various projects, and nearly 190,000 projects have been successfully funded.
+
 However, many more projects failed to reach their goals, and our group is interested in analyzing what made projects succeed and fail. The dataset [Kickstarter Projects](https://www.kaggle.com/kemical/kickstarter-projects) comes from Kaggle, which contains Kickstarter projects up until January 2018.
  
 We will be exploring which variables influence the success of a Kickstarter project by observing which types of projects are more likely to be funded. Our questions include:
@@ -27,6 +27,7 @@ The goal of the project is to give future Kickstarter creators insight into whic
 ```{r file-glimpse, eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
 library(broom)
+library(knitr)
 
 kickstarter <- read_csv("data/ks-projects-201801.csv")
 glimpse(kickstarter)
@@ -66,16 +67,17 @@ ggplot(data = kickstarter_state_count,
 kickstarter_success_rate = kickstarter %>%
   filter(state == "successful") %>%
   summarize("project success rate" = n()/nrow(kickstarter))
-
-kickstarter_state_count
-kickstarter_success_rate
 ```
 
-More projects failed than those that succeeded, with an average success rate of 35.4%.
+```{r state-tables, echo=FALSE, results='asis'}
+kable(kickstarter_state_count, caption = 'Count of each Kickstarter Project State')
+```
+
+More projects failed than those that succeeded, with an average success percentage of `r 100*round(kickstarter_success_rate[1,1], digits = 3)`%.
 
 ## Overview of pledged and goal amount in USD:
 
-```{r pledged-and-goal-overview, echo=FALSE,warning=FALSE, message=FALSE, echo=FALSE}
+```{r pledged-and-goal-overview-table, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
 overview_usd_pledged_real <- kickstarter %>%
   summarize(mean = mean(usd_pledged_real),
             median = median(usd_pledged_real),
@@ -89,9 +91,11 @@ overview_usd_goal_real <- kickstarter %>%
     sd = sd(usd_goal_real))%>% 
   mutate(type = "goal")
 
-overview_usd_pledged_real
-overview_usd_goal_real
+kable(overview_usd_pledged_real, caption = 'Overview of Pledged Amount')
+kable(overview_usd_goal_real, caption = 'Overview of Goal Amount')
+```
 
+```{r pledged-and-goal-overview-visual, echo=FALSE, warning=FALSE, message=FALSE}
 pledged_goals <- full_join(overview_usd_pledged_real, overview_usd_goal_real,
                           by = NULL)
 
@@ -142,7 +146,7 @@ In order to perform a hypothesis testing on this claim, we need to quantify the 
 
 The tiers are as follows: Tier 1 < 1,000 in goal USD, Tier 2 $\ge$ 1,000 and < 5,000, Tier 3 $\ge$ 5,000 and < 10,000, Tier 4 $\ge$ 10,000 and < 20,000, Tier 5 $\ge$ 20,000 and < 100,000, Tier 6 $\ge$ 100,000 and < 500,000, and Tier 7 $\ge$ 500,000.
 
-```{r mutate-goal-tiers,warning=FALSE, message=FALSE, echo=FALSE}
+```{r mutate-goal-tiers-chart, warning=FALSE, message=FALSE, echo=FALSE, results='asis'}
 
 # perhaps need a better way to categorize values in this column
 kickstarter <- kickstarter %>%
@@ -160,8 +164,10 @@ chart<- kickstarter %>%
   group_by(usd_goal_real_tier) %>%
   summarize(numbers = n())
 
-chart
+kable(chart, caption = 'Overview of Tiers')
+```
 
+```{r mutate-goal-tiers-visual,warning=FALSE, message=FALSE, echo=FALSE}
 ggplot(data = chart,
        mapping = aes(x = factor(usd_goal_real_tier),
                      y = numbers,
@@ -194,8 +200,8 @@ Our following CLT approach is testing whether or not there is a relationship bet
 
 ```{r money-eval,warning=FALSE, message=FALSE, echo=FALSE}
 set.seed(1)
-chisq.test(table(kickstarter$usd_goal_real_tier, 
-                 kickstarter$success_state))
+
+chisq.test(table(kickstarter$usd_goal_real_tier, kickstarter$success_state))
 ```
 
 **Analysis of Results:**
@@ -216,8 +222,9 @@ kickstarter$usd_goal_real_tier <- factor(
   levels = c(1, 2, 3, 4, 5, 6, 7))
 
 tier_mod = glm(success_state ~ usd_goal_real_tier, data = kickstarter)
+
 tidy(tier_mod) %>%
-select(term, estimate)
+  select(term, estimate)
 ```
 
 Relative to tier 1, the most likely funded project category tier is Tier 1. The odds of success for tier 2, holding everything constant, is $e^{-0.067468}$ = 0.9347 times the odds of success for the Tier 1 projects.
@@ -233,7 +240,7 @@ The accuracy of or analysis for this question is limited by the fact there could
 
 *Question*: Does the main category of project influence it’s chance of success?
 
-```{r category-success,warning=FALSE, message=FALSE, echo=FALSE}
+```{r category-success-chart, echo=FALSE, message=FALSE, warning=FALSE}
 kickstater_success_ratios <- kickstarter %>% 
   group_by(main_category, success_state) %>% 
   count(success_state) %>% 
@@ -246,8 +253,16 @@ kickstater_success_ratios <- kickstarter %>%
     )
   )
 
-kickstater_success_ratios
+kickstater_success_ratios_successful <- kickstater_success_ratios %>%
+  filter(success_state == 1) %>%
+  select(main_category, prop)
 
+kable(kickstater_success_ratios_successful,
+      caption = 'Success Rate by Category',
+      digits = 3)
+```
+
+```{r category-success-visual,warning=FALSE, message=FALSE, echo=FALSE}
 ggplot(data = kickstater_success_ratios,
        aes(x = plot_success, y = prop, fill = main_category)) +
   ylim(0, 1) +
@@ -257,7 +272,7 @@ ggplot(data = kickstater_success_ratios,
   labs(x = "Success state",
        y = "Proportion",
        title = "Successful vs. Other Projects, faceted by category",
-       subtitle = "Success ratio of Comics, Dance, Music, and Theater categories > 1") +
+       subtitle = "Success rate of Comics, Dance, Music, and Theater categories > 1") +
   scale_fill_viridis_d() +
   theme_minimal() + 
   theme(legend.position = "none")
