@@ -371,4 +371,9 @@ The second hypothesis asked how the categories of projects influenced the _succe
 
 ## Critique and Further Directions
 
+ We have to remember that logistic regression models assume linearity in the log-odds, which we did not screen for before doing our analysis. Furthermore, a "chi-square test is very sensitive to sample size. With a large enough sample, even trivial relationships can appear to be statistically significant”$^1$. The chi-square test also only tells us whether two variables are related to one another. It does not necessarily imply that one variable has any causal effect on the other$^1$
+
 The Kickstarter dataset we have is a rigorous collection of data to give project creators insight into which projects have historically succeeded. The dataset is limited, however. We have been able to give creators the statistical odds of success based on monetary and categorical variables, yet have neither looked into how long each project was on Kickstarter for funding, nor what time of the year donations may spike. People may be more charitable during the holiday period, and that may lead to more projects being funded. Not then only would creators have the knowledge of which projects secured funding based off the funding goal and category, but they would also have tools now on when to launch their Kickstarter funding. Furthermore, a dataset on how each project managed their marketing campaign would be more than helpful to creators. Sentiment analysis of the campaign, along with its length, how often it changed, the target audience, and where it was marketed (socials, print, word of mouth, etc) would be the start of this dataset. All told, this analysis we have done is the start of a much larger project. We have shown that there are influencers on a project's funding success, and finding those with the largest influence should be the next priority to complete this project.
+
+
+$^1$ https://soc.utah.edu/sociology3112/chi-square.php
