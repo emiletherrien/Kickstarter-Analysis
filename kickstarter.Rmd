@@ -525,7 +525,19 @@ The observed mean average funding goal was approximately five times higher than
 the average.
 
 Our EDA showed us that the odds are stacked against most kickstarter projects in 
-terms of being likely to successfully reaching their funding goal. However, 
+terms of being likely to successfully reaching their funding goal. Given that our 
+EDA used all of the data in the kickstarter data set (except forthe _live_ 
+observations), our observations were relatively reliable and valid.
+
+However, it would have also been helpful to plot a bar chart of the count of the 
+main project categories to see which ones were most popular. This would have been
+good to know going into the deeper analysis section, as it would have given us an 
+idea of which main categories were most popular in terms of pitching kickstarter
+projects. 
+
+
+
+
 
 
 
